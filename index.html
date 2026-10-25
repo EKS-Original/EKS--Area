@@ -2,7 +2,7 @@
 <html lang="en" class="h-full bg-slate-950">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EKS Professional Electrical Engineering Suite</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,6 +32,11 @@
                             850: '#0b1329',
                             900: '#080e1e',
                             950: '#030712'
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706'
                         }
                     },
                     fontFamily: {
@@ -59,6 +64,21 @@
             background: #475569;
         }
         
+        /* Shake Animation for Wrong Passcode */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Responsive Mobile Inputs & Touch Target Sizing */
+        input, select, button {
+            touch-action: manipulation;
+        }
+
         /* Print Stylesheet */
         @media print {
             body {
@@ -84,66 +104,143 @@
             .bg-slate-900, .bg-slate-950, .bg-navy-900, .bg-navy-850 {
                 background: #ffffff !important;
             }
+            #lockScreen {
+                display: none !important;
+            }
         }
     </style>
 </head>
 <body class="h-full font-sans text-slate-200 bg-navy-950 antialiased selection:bg-brand-500 selection:text-white flex flex-col min-h-screen">
 
+    <!-- 🔒 PASSWORD ACCESS CONTROL OVERLAY -->
+    <div id="lockScreen" class="fixed inset-0 z-[100] bg-navy-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+        <div id="lockCard" class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center">
+            <div class="absolute -top-16 -right-16 w-36 h-36 bg-gold-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-16 -left-16 w-36 h-36 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <!-- Lock Header -->
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-gold-600 to-amber-400 mx-auto flex items-center justify-center text-slate-950 text-2xl shadow-lg shadow-gold-500/20 mb-4">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2 class="text-xl font-extrabold text-white tracking-wide">EKS Suite Security</h2>
+            <p class="text-xs text-slate-400 mt-1">Please enter passcode to access engineering suite</p>
+
+            <!-- Passcode Form -->
+            <form onsubmit="handleUnlock(event)" class="mt-6 space-y-4">
+                <div class="relative">
+                    <input type="password" id="passcodeInput" placeholder="Enter Access Code" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg text-white font-mono tracking-widest focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition">
+                    <button type="button" onclick="togglePasscodeVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-2">
+                        <i id="eyeIcon" class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+
+                <div id="lockErrorMessage" class="text-xs font-semibold text-rose-400 hidden flex items-center justify-center space-x-1">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span>Incorrect passcode. Default code: <strong>EKS2026</strong></span>
+                </div>
+
+                <!-- Remember Session Option -->
+                <div class="flex items-center justify-center space-x-2 text-xs text-slate-400 py-1">
+                    <input type="checkbox" id="rememberSessionCheck" class="rounded border-slate-700 bg-slate-950 text-gold-500 focus:ring-gold-500 h-4 w-4">
+                    <label for="rememberSessionCheck" class="cursor-pointer select-none">Remember access on this device</label>
+                </div>
+
+                <!-- Action Button -->
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-gold-500 to-amber-500 hover:from-gold-600 hover:to-amber-600 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-gold-500/20 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Unlock Suite</span>
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
+                Default Access Code: <span class="font-mono text-gold-400 font-bold">EKS2026</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Top Navigation Header -->
-    <header class="no-print bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 font-bold text-xl">
+    <header class="no-print bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 font-bold text-lg sm:text-xl">
                     <i class="fa-solid fa-bolt"></i>
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-white tracking-wide">EKS Suite <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/20 text-cyan-400 border border-cyan-500/30 font-mono">PRO v2.5</span></h1>
-                    <p class="text-xs text-slate-400">BS 7671 / IEC Electrical Calculation Engine</p>
+                    <h1 class="text-base sm:text-lg font-bold text-white tracking-wide flex items-center space-x-1.5">
+                        <span>EKS Suite</span>
+                        <span class="text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-gold-500/20 text-gold-400 border border-gold-500/30 font-mono">PRO</span>
+                    </h1>
+                    <p class="text-[10px] sm:text-xs text-slate-400 truncate max-w-[150px] sm:max-w-none">BS 7671 / IEC Electrical Suite</p>
                 </div>
             </div>
 
-            <!-- Header Action Buttons -->
-            <div class="flex items-center space-x-2 sm:space-x-3">
-                <button onclick="saveToLocalStorage()" title="Save Data locally" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1.5">
+            <!-- Mobile & Desktop Action Buttons -->
+            <div class="flex items-center space-x-1.5 sm:space-x-2">
+                <button onclick="saveToLocalStorage()" title="Save Data locally" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1">
                     <i class="fa-solid fa-floppy-disk text-cyan-400"></i>
-                    <span class="hidden sm:inline">Save</span>
+                    <span class="hidden md:inline">Save</span>
                 </button>
-                <button onclick="loadDemoData()" title="Load Pre-filled Demo Data" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1.5">
+                <button onclick="loadDemoData()" title="Load Pre-filled Demo Data" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1">
                     <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
-                    <span class="hidden sm:inline">Demo Data</span>
+                    <span class="hidden md:inline">Demo</span>
                 </button>
-                <button onclick="exportJSON()" title="Export JSON File" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1.5">
+                <button onclick="exportJSON()" title="Export JSON File" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1">
                     <i class="fa-solid fa-file-export text-emerald-400"></i>
-                    <span class="hidden sm:inline">Export JSON</span>
+                    <span class="hidden md:inline">Export</span>
                 </button>
-                <button onclick="window.print()" title="Print Summary Report" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-600/30 transition flex items-center space-x-1.5">
+                <button onclick="window.print()" title="Print Summary Report" class="hidden sm:flex px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-600/30 transition items-center space-x-1.5">
                     <i class="fa-solid fa-print"></i>
-                    <span>Print Report</span>
+                    <span>Print</span>
+                </button>
+                <!-- Lock Suite Button -->
+                <button onclick="lockSuite()" title="Lock Suite (Logout)" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 transition flex items-center space-x-1">
+                    <i class="fa-solid fa-lock"></i>
+                    <span class="hidden sm:inline">Lock</span>
                 </button>
             </div>
         </div>
+
+        <!-- Mobile Module Navigation Tabs -->
+        <nav class="no-print flex md:hidden overflow-x-auto border-t border-slate-800/80 bg-slate-950/60 px-2 py-1.5 space-x-1 text-xs">
+            <button onclick="scrollToSection('sec-dashboard')" class="flex-none px-3 py-1.5 rounded-lg bg-slate-800 text-cyan-400 font-medium flex items-center space-x-1.5">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </button>
+            <button onclick="scrollToSection('sec-lighting')" class="flex-none px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-medium flex items-center space-x-1.5">
+                <i class="fa-regular fa-lightbulb text-amber-400"></i>
+                <span>1. Lighting</span>
+            </button>
+            <button onclick="scrollToSection('sec-db')" class="flex-none px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-medium flex items-center space-x-1.5">
+                <i class="fa-solid fa-network-wired text-cyan-400"></i>
+                <span>2. DB Schedule</span>
+            </button>
+            <button onclick="scrollToSection('sec-vd')" class="flex-none px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-medium flex items-center space-x-1.5">
+                <i class="fa-solid fa-plug text-emerald-400"></i>
+                <span>3. Cable & VD</span>
+            </button>
+        </nav>
     </header>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
 
         <!-- 1. EXECUTIVE PROJECT DASHBOARD -->
-        <section class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-5 sm:p-6 shadow-xl relative overflow-hidden">
+        <section id="sec-dashboard" class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl relative overflow-hidden">
             <div class="absolute -top-24 -right-24 w-60 h-60 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
                 <div>
-                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                    <h2 class="text-base sm:text-xl font-bold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-chart-pie text-brand-500"></i>
                         <span>Executive Project Dashboard</span>
                     </h2>
-                    <p class="text-xs text-slate-400">Global system parameters and live key performance metrics.</p>
+                    <p class="text-[11px] sm:text-xs text-slate-400">Global system parameters and live key performance metrics.</p>
                 </div>
 
                 <!-- Overall System Status Badge -->
-                <div class="flex items-center space-x-3 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                    <span class="text-xs font-semibold text-slate-400">SYSTEM STATUS:</span>
-                    <div id="sysComplianceBadge" class="px-3 py-1 rounded-lg text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center space-x-1.5">
+                <div class="flex items-center justify-between sm:justify-start space-x-3 bg-slate-950/60 p-2 sm:p-2.5 rounded-xl border border-slate-800">
+                    <span class="text-[10px] sm:text-xs font-semibold text-slate-400">STATUS:</span>
+                    <div id="sysComplianceBadge" class="px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center space-x-1.5">
                         <i class="fa-solid fa-circle-check"></i>
                         <span>PASS (COMPLIANT)</span>
                     </div>
@@ -151,106 +248,106 @@
             </div>
 
             <!-- Project Inputs Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-5 no-print">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mt-4 no-print">
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Project Name</label>
+                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Project Name</label>
                     <input type="text" id="projName" value="Time Square Tower - Block B" oninput="calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Lead Engineer</label>
+                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Lead Engineer</label>
                     <input type="text" id="engineerName" value="EKS Lead Engineer" oninput="calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Voltage System</label>
+                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Voltage System</label>
                     <select id="voltageSystem" onchange="calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 transition font-mono">
                         <option value="400">3-Phase 400V AC (50Hz)</option>
                         <option value="230">Single Phase 230V AC (50Hz)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Power Factor ($\cos \phi$)</label>
+                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Power Factor ($\cos \phi$)</label>
                     <input type="number" id="powerFactor" step="0.01" min="0.5" max="1.0" value="0.85" oninput="calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 transition font-mono">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Grid Frequency</label>
+                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Grid Frequency</label>
                     <input type="text" value="50 Hz" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-400 font-mono">
                 </div>
             </div>
 
             <!-- Dynamic KPI Cards -->
-            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mt-5">
                 <!-- KPI 1 -->
-                <div class="bg-slate-950/80 rounded-xl p-4 border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Total Connected Load</span>
+                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800">
+                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Total Connected Load</span>
                     <div class="flex items-baseline space-x-1">
-                        <span id="kpiConnectedLoad" class="text-xl sm:text-2xl font-bold font-mono text-cyan-400">0.00</span>
+                        <span id="kpiConnectedLoad" class="text-lg sm:text-2xl font-bold font-mono text-cyan-400">0.00</span>
                         <span class="text-xs font-bold text-slate-400">kW</span>
                     </div>
-                    <span class="text-[10px] text-slate-500 mt-1 block">Sum of DB & Light loads</span>
+                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">Sum of DB & Light loads</span>
                 </div>
 
                 <!-- KPI 2 -->
-                <div class="bg-slate-950/80 rounded-xl p-4 border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Total Demand Load</span>
+                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800">
+                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Total Demand Load</span>
                     <div class="flex items-baseline space-x-1">
-                        <span id="kpiDemandLoad" class="text-xl sm:text-2xl font-bold font-mono text-emerald-400">0.00</span>
+                        <span id="kpiDemandLoad" class="text-lg sm:text-2xl font-bold font-mono text-emerald-400">0.00</span>
                         <span class="text-xs font-bold text-slate-400">kW</span>
                     </div>
-                    <span class="text-[10px] text-slate-500 mt-1 block">Factored Peak Power Demand</span>
+                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">Factored Peak Power Demand</span>
                 </div>
 
                 <!-- KPI 3 -->
-                <div class="bg-slate-950/80 rounded-xl p-4 border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Calculated Current</span>
+                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800">
+                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Calculated Current</span>
                     <div class="flex items-baseline space-x-1">
-                        <span id="kpiMainCurrent" class="text-xl sm:text-2xl font-bold font-mono text-amber-400">0.00</span>
+                        <span id="kpiMainCurrent" class="text-lg sm:text-2xl font-bold font-mono text-amber-400">0.00</span>
                         <span class="text-xs font-bold text-slate-400">Amps</span>
                     </div>
-                    <span class="text-[10px] text-slate-500 mt-1 block">Main Incomer Operating Current</span>
+                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">Main Incomer Operating Current</span>
                 </div>
 
                 <!-- KPI 4 -->
-                <div class="bg-slate-950/80 rounded-xl p-4 border border-slate-800">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Rec. Main Breaker</span>
+                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800">
+                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Rec. Main Breaker</span>
                     <div class="flex items-baseline space-x-1">
-                        <span id="kpiBreakerRating" class="text-xl sm:text-2xl font-bold font-mono text-indigo-400">0</span>
+                        <span id="kpiBreakerRating" class="text-lg sm:text-2xl font-bold font-mono text-indigo-400">0</span>
                         <span class="text-xs font-bold text-slate-400">A MCCB</span>
                     </div>
-                    <span class="text-[10px] text-slate-500 mt-1 block">Standard Rated Rating</span>
+                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">Standard Rated Breaker Rating</span>
                 </div>
 
                 <!-- KPI 5 -->
-                <div class="bg-slate-950/80 rounded-xl p-4 border border-slate-800 col-span-2 lg:col-span-1">
-                    <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Max Feeder Voltage Drop</span>
+                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800 col-span-2 lg:col-span-1">
+                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Max Feeder Voltage Drop</span>
                     <div class="flex items-baseline space-x-1">
-                        <span id="kpiMaxVD" class="text-xl sm:text-2xl font-bold font-mono text-rose-400">0.00</span>
+                        <span id="kpiMaxVD" class="text-lg sm:text-2xl font-bold font-mono text-rose-400">0.00</span>
                         <span class="text-xs font-bold text-slate-400">%</span>
                     </div>
-                    <span class="text-[10px] text-slate-500 mt-1 block">BS 7671 Limit $\le 4.0\%$</span>
+                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">BS 7671 Limit $\le 4.0\%$</span>
                 </div>
             </div>
         </section>
 
         <!-- 2. LUMEN METHOD LIGHTING CALCULATOR -->
-        <section class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-5 sm:p-6 shadow-xl">
+        <section id="sec-lighting" class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
                 <div>
-                    <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <h2 class="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
                         <i class="fa-regular fa-lightbulb text-amber-400"></i>
                         <span>1. Indoor Lighting Calculator (Lumen Method Engine)</span>
                     </h2>
-                    <p class="text-xs text-slate-400">Formula: $N = \frac{E \times A}{F \times UF \times MF}$. Standard illuminance calculations.</p>
+                    <p class="text-[11px] sm:text-xs text-slate-400">Formula: $N = \frac{E \times A}{F \times UF \times MF}$. Standard illuminance calculations.</p>
                 </div>
-                <button onclick="addLightingRow()" class="no-print self-start sm:self-auto px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white transition flex items-center space-x-1">
+                <button onclick="addLightingRow()" class="no-print self-start sm:self-auto px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white transition flex items-center space-x-1 shadow-md">
                     <i class="fa-solid fa-plus"></i>
                     <span>Add Room Space</span>
                 </button>
             </div>
 
-            <!-- Table Container -->
-            <div class="overflow-x-auto mt-4">
-                <table class="w-full text-left text-xs text-slate-300">
-                    <thead class="bg-slate-950/80 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
+            <!-- Table Container with Horizontal Scroll on Mobile -->
+            <div class="overflow-x-auto mt-4 border border-slate-800/80 rounded-xl">
+                <table class="w-full text-left text-xs text-slate-300 min-w-[750px]">
+                    <thead class="bg-slate-950 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
                         <tr>
                             <th class="p-2.5 min-w-[140px]">Room / Space</th>
                             <th class="p-2.5 w-24">Length (m)</th>
@@ -265,16 +362,16 @@
                             <th class="p-2.5 w-10 text-center no-print">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="lightingTbody" class="divide-y divide-slate-800/60 font-mono">
+                    <tbody id="lightingTbody" class="divide-y divide-slate-800/60 font-mono bg-slate-950/40">
                         <!-- Dynamic Rows Injected Here -->
                     </tbody>
                 </table>
             </div>
 
             <!-- Lighting Summary Bar -->
-            <div class="mt-4 p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex flex-wrap items-center justify-between gap-4 text-xs">
-                <div class="flex items-center space-x-4">
-                    <span>Total Area Calculated: <strong id="totalLightArea" class="text-cyan-400 font-mono">0.00 m²</strong></span>
+            <div class="mt-4 p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <span>Total Area: <strong id="totalLightArea" class="text-cyan-400 font-mono">0.00 m²</strong></span>
                     <span>Total Lumens Needed: <strong id="totalLightLumens" class="text-amber-400 font-mono">0 lm</strong></span>
                 </div>
                 <div>
@@ -284,32 +381,32 @@
         </section>
 
         <!-- 3. DISTRIBUTION BOARD LOAD SCHEDULE & PHASE BALANCING -->
-        <section class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-5 sm:p-6 shadow-xl">
+        <section id="sec-db" class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
                 <div>
-                    <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <h2 class="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-network-wired text-cyan-400"></i>
                         <span>2. DB Load Schedule & 3-Phase Balancing System</span>
                     </h2>
-                    <p class="text-xs text-slate-400">Assign electrical loads to Phase R, Y, B and calculate maximum demand & current.</p>
+                    <p class="text-[11px] sm:text-xs text-slate-400">Assign electrical loads to Phase R, Y, B and calculate maximum demand & current.</p>
                 </div>
-                <button onclick="addDBRow()" class="no-print self-start sm:self-auto px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white transition flex items-center space-x-1">
+                <button onclick="addDBRow()" class="no-print self-start sm:self-auto px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white transition flex items-center space-x-1 shadow-md">
                     <i class="fa-solid fa-plus"></i>
                     <span>Add Circuit</span>
                 </button>
             </div>
 
-            <!-- Table Container -->
-            <div class="overflow-x-auto mt-4">
-                <table class="w-full text-left text-xs text-slate-300">
-                    <thead class="bg-slate-950/80 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
+            <!-- Table Container with Horizontal Scroll -->
+            <div class="overflow-x-auto mt-4 border border-slate-800/80 rounded-xl">
+                <table class="w-full text-left text-xs text-slate-300 min-w-[900px]">
+                    <thead class="bg-slate-950 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
                         <tr>
                             <th class="p-2.5 w-24">Cct Ref</th>
                             <th class="p-2.5 min-w-[150px]">Description</th>
                             <th class="p-2.5 w-24">Rating (W)</th>
                             <th class="p-2.5 w-16">Qty</th>
                             <th class="p-2.5 w-24">Total (W)</th>
-                            <th class="p-2.5 w-20">Phase</th>
+                            <th class="p-2.5 w-24">Phase</th>
                             <th class="p-2.5 w-20">D.F</th>
                             <th class="p-2.5 w-24">Demand (W)</th>
                             <th class="p-2.5 w-20">Current (A)</th>
@@ -318,7 +415,7 @@
                             <th class="p-2.5 w-10 text-center no-print">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="dbTbody" class="divide-y divide-slate-800/60 font-mono">
+                    <tbody id="dbTbody" class="divide-y divide-slate-800/60 font-mono bg-slate-950/40">
                         <!-- Dynamic Rows Injected Here -->
                     </tbody>
                 </table>
@@ -326,7 +423,7 @@
 
             <!-- 3-Phase Balancing Live Visualizer -->
             <div class="mt-6 p-4 bg-slate-950/80 rounded-xl border border-slate-800 space-y-3">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                     <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
                         <i class="fa-solid fa-scale-balanced text-amber-400"></i>
                         <span>3-Phase Load Distribution & Balance Monitor</span>
@@ -336,34 +433,34 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
                     <!-- Phase Red -->
-                    <div class="space-y-1">
+                    <div class="space-y-1 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
                         <div class="flex justify-between text-rose-400 font-semibold">
                             <span>Phase R (Red):</span>
                             <span id="phaseRVal">0.00 kW</span>
                         </div>
-                        <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                        <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden">
                             <div id="barPhaseR" class="bg-rose-500 h-full transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
 
                     <!-- Phase Yellow -->
-                    <div class="space-y-1">
+                    <div class="space-y-1 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
                         <div class="flex justify-between text-amber-400 font-semibold">
                             <span>Phase Y (Yellow):</span>
                             <span id="phaseYVal">0.00 kW</span>
                         </div>
-                        <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                        <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden">
                             <div id="barPhaseY" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
 
                     <!-- Phase Blue -->
-                    <div class="space-y-1">
+                    <div class="space-y-1 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
                         <div class="flex justify-between text-sky-400 font-semibold">
                             <span>Phase B (Blue):</span>
                             <span id="phaseBVal">0.00 kW</span>
                         </div>
-                        <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                        <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden">
                             <div id="barPhaseB" class="bg-sky-400 h-full transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
@@ -372,25 +469,25 @@
         </section>
 
         <!-- 4. CABLE VOLTAGE DROP & SIZING CALCULATOR -->
-        <section class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-5 sm:p-6 shadow-xl">
+        <section id="sec-vd" class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
                 <div>
-                    <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <h2 class="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-plug text-emerald-400"></i>
                         <span>3. Feeder Cable Sizing & Voltage Drop Engine</span>
                     </h2>
-                    <p class="text-xs text-slate-400">Formula: $V_d = \frac{I_L \times L \times (mV/A/m)}{1000}$. BS 7671 voltage drop compliance tool.</p>
+                    <p class="text-[11px] sm:text-xs text-slate-400">Formula: $V_d = \frac{I_L \times L \times (mV/A/m)}{1000}$. BS 7671 voltage drop compliance tool.</p>
                 </div>
-                <button onclick="addVDRow()" class="no-print self-start sm:self-auto px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center space-x-1">
+                <button onclick="addVDRow()" class="no-print self-start sm:self-auto px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center space-x-1 shadow-md">
                     <i class="fa-solid fa-plus"></i>
                     <span>Add Feeder Cable</span>
                 </button>
             </div>
 
-            <!-- Table Container -->
-            <div class="overflow-x-auto mt-4">
-                <table class="w-full text-left text-xs text-slate-300">
-                    <thead class="bg-slate-950/80 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
+            <!-- Table Container with Horizontal Scroll -->
+            <div class="overflow-x-auto mt-4 border border-slate-800/80 rounded-xl">
+                <table class="w-full text-left text-xs text-slate-300 min-w-[950px]">
+                    <thead class="bg-slate-950 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
                         <tr>
                             <th class="p-2.5 w-24">Feeder Ref</th>
                             <th class="p-2.5 w-28">From Node</th>
@@ -398,7 +495,7 @@
                             <th class="p-2.5 w-24">Load (kW)</th>
                             <th class="p-2.5 w-20">Current (A)</th>
                             <th class="p-2.5 w-24">Length (m)</th>
-                            <th class="p-2.5 min-w-[140px]">Cable Size (Cu/XLPE)</th>
+                            <th class="p-2.5 min-w-[150px]">Cable Size (Cu/XLPE)</th>
                             <th class="p-2.5 w-24">mV/A/m</th>
                             <th class="p-2.5 w-24">VD (Volts)</th>
                             <th class="p-2.5 w-20">VD (%)</th>
@@ -406,7 +503,7 @@
                             <th class="p-2.5 w-10 text-center no-print">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="vdTbody" class="divide-y divide-slate-800/60 font-mono">
+                    <tbody id="vdTbody" class="divide-y divide-slate-800/60 font-mono bg-slate-950/40">
                         <!-- Dynamic Rows Injected Here -->
                     </tbody>
                 </table>
@@ -417,19 +514,23 @@
 
     <!-- Footer Container -->
     <footer class="no-print bg-slate-900 border-t border-slate-800 mt-8 py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2 text-center sm:text-left">
             <div>
-                <span>© 2026 EKS Professional Engineering Suite. Compliant with IEC 60364 & BS 7671 Standards.</span>
+                <span>© 2026 EKS Professional Engineering Suite. Compliant with IEC 60364 & BS 7671.</span>
             </div>
             <div class="flex items-center space-x-4">
-                <span class="hover:text-slate-300 transition cursor-pointer" onclick="loadDemoData()"><i class="fa-solid fa-rotate-right mr-1"></i>Reset Demo Data</span>
+                <span class="hover:text-slate-300 transition cursor-pointer" onclick="loadDemoData()"><i class="fa-solid fa-rotate-right mr-1"></i>Reset Demo</span>
                 <span class="hover:text-slate-300 transition cursor-pointer" onclick="clearAllData()"><i class="fa-solid fa-trash mr-1"></i>Clear All</span>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript Calculation Engine -->
+    <!-- JavaScript Calculation Engine & Passcode Access Control System -->
     <script>
+        // Security Settings
+        const DEFAULT_PASSCODE = "EKS2026";
+        const SESSION_KEY = "eks_session_authenticated";
+
         // Preset Lux Levels
         const LUX_PRESETS = {
             'office': 500,
@@ -467,8 +568,10 @@
         let dbRows = [];
         let vdRows = [];
 
-        // Application Initialization
+        // Application Initialization & Security Check
         window.addEventListener('DOMContentLoaded', () => {
+            checkAuthStatus();
+            
             const savedData = localStorage.getItem('eks_suite_data');
             if (savedData) {
                 try {
@@ -488,6 +591,70 @@
             }
             renderAll();
         });
+
+        // 🔒 Security Passcode Functions
+        function checkAuthStatus() {
+            const isAuth = localStorage.getItem(SESSION_KEY);
+            const lockScreen = document.getElementById('lockScreen');
+            if (isAuth === 'true') {
+                lockScreen.classList.add('hidden');
+            } else {
+                lockScreen.classList.remove('hidden');
+            }
+        }
+
+        function handleUnlock(event) {
+            event.preventDefault();
+            const input = document.getElementById('passcodeInput');
+            const errorMsg = document.getElementById('lockErrorMessage');
+            const lockCard = document.getElementById('lockCard');
+            const rememberCheck = document.getElementById('rememberSessionCheck');
+
+            if (input.value.trim() === DEFAULT_PASSCODE) {
+                errorMsg.classList.add('hidden');
+                if (rememberCheck.checked) {
+                    localStorage.setItem(SESSION_KEY, 'true');
+                } else {
+                    sessionStorage.setItem(SESSION_KEY, 'true');
+                    localStorage.setItem(SESSION_KEY, 'true'); // Default allow session for smooth usage
+                }
+                document.getElementById('lockScreen').classList.add('hidden');
+                input.value = '';
+            } else {
+                errorMsg.classList.remove('hidden');
+                lockCard.classList.remove('animate-shake');
+                void lockCard.offsetWidth; // Trigger reflow for animation restart
+                lockCard.classList.add('animate-shake');
+            }
+        }
+
+        function togglePasscodeVisibility() {
+            const input = document.getElementById('passcodeInput');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.className = 'fa-solid fa-eye-slash';
+            } else {
+                input.type = 'password';
+                eyeIcon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function lockSuite() {
+            localStorage.removeItem(SESSION_KEY);
+            sessionStorage.removeItem(SESSION_KEY);
+            const lockScreen = document.getElementById('lockScreen');
+            lockScreen.classList.remove('hidden');
+            document.getElementById('passcodeInput').focus();
+        }
+
+        // Mobile Smooth Navigation Scroll
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
 
         // Load Pre-populated Professional Demo Data
         function loadDemoData() {
@@ -873,10 +1040,10 @@
             // Compliance Badge Status
             const sysBadge = document.getElementById('sysComplianceBadge');
             if (!anyVDFailed && unbalancePct <= 20) {
-                sysBadge.className = "px-3 py-1 rounded-lg text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center space-x-1.5";
+                sysBadge.className = "px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center space-x-1.5";
                 sysBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>PASS (COMPLIANT)</span>`;
             } else {
-                sysBadge.className = "px-3 py-1 rounded-lg text-xs font-extrabold uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center space-x-1.5";
+                sysBadge.className = "px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center space-x-1.5";
                 sysBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i><span>NON-COMPLIANT</span>`;
             }
         }
@@ -893,7 +1060,16 @@
                 vdRows: vdRows
             };
             localStorage.setItem('eks_suite_data', JSON.stringify(data));
-            alert('Project data successfully saved to local browser storage.');
+            showToast('Project data saved to local storage.');
+        }
+
+        // Helper Toast Notification (Mobile Alert replacement)
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 z-[99] bg-slate-800 text-cyan-400 border border-cyan-500/30 font-semibold px-4 py-2.5 rounded-xl shadow-xl text-xs flex items-center space-x-2 animate-bounce';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
         }
 
         // Export Data JSON File
