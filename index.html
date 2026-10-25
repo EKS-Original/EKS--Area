@@ -1,1102 +1,972 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EKS Professional Electrical Engineering Suite</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EKS Professional Electrical Engineering Suite</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Font: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            eks: {
+              900: '#0B132B',
+              800: '#1C2541',
+              700: '#2A385B',
+              accent: '#3A506B',
+              gold: '#F59E0B',
+              cyan: '#06B6D4',
+              emerald: '#10B981',
+              rose: '#F43F5E'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    /* Hide scrollbars for smooth touch swipe on mobile */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            500: '#0284c7',
-                            600: '#0265d2',
-                            700: '#0369a1',
-                            900: '#0c4a6e',
-                        },
-                        navy: {
-                            800: '#0f172a',
-                            850: '#0b1329',
-                            900: '#080e1e',
-                            950: '#030712'
-                        },
-                        gold: {
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                            600: '#d97706'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Custom Scrollbars */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
-        
-        /* Shake Animation for Wrong Passcode */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-10px); }
-            40%, 80% { transform: translateX(10px); }
-        }
-        .animate-shake {
-            animation: shake 0.4s ease-in-out;
-        }
-
-        /* Responsive Mobile Inputs & Touch Target Sizing */
-        input, select, button {
-            touch-action: manipulation;
-        }
-
-        /* Print Stylesheet */
-        @media print {
-            body {
-                background: white !important;
-                color: black !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-only {
-                display: block !important;
-            }
-            .card-box {
-                border: 1px solid #cbd5e1 !important;
-                background: white !important;
-                color: black !important;
-                box-shadow: none !important;
-                page-break-inside: avoid;
-            }
-            .text-slate-100, .text-slate-200, .text-slate-300, .text-slate-400, .text-white {
-                color: #0f172a !important;
-            }
-            .bg-slate-900, .bg-slate-950, .bg-navy-900, .bg-navy-850 {
-                background: #ffffff !important;
-            }
-            #lockScreen {
-                display: none !important;
-            }
-        }
-    </style>
+    /* Smooth transitions */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
 </head>
-<body class="h-full font-sans text-slate-200 bg-navy-950 antialiased selection:bg-brand-500 selection:text-white flex flex-col min-h-screen">
+<body class="bg-eks-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-eks-cyan selection:text-eks-900">
 
-    <!-- 🔒 PASSWORD ACCESS CONTROL OVERLAY -->
-    <div id="lockScreen" class="fixed inset-0 z-[100] bg-navy-950/95 backdrop-blur-xl flex items-center justify-center p-4">
-        <div id="lockCard" class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center">
-            <div class="absolute -top-16 -right-16 w-36 h-36 bg-gold-500/10 rounded-full blur-2xl pointer-events-none"></div>
-            <div class="absolute -bottom-16 -left-16 w-36 h-36 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
-
-            <!-- Lock Header -->
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-gold-600 to-amber-400 mx-auto flex items-center justify-center text-slate-950 text-2xl shadow-lg shadow-gold-500/20 mb-4">
-                <i class="fa-solid fa-lock"></i>
-            </div>
-            <h2 class="text-xl font-extrabold text-white tracking-wide">EKS Suite Security</h2>
-            <p class="text-xs text-slate-400 mt-1">Please enter passcode to access engineering suite</p>
-
-            <!-- Passcode Form -->
-            <form onsubmit="handleUnlock(event)" class="mt-6 space-y-4">
-                <div class="relative">
-                    <input type="password" id="passcodeInput" placeholder="Enter Access Code" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg text-white font-mono tracking-widest focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition">
-                    <button type="button" onclick="togglePasscodeVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-2">
-                        <i id="eyeIcon" class="fa-solid fa-eye"></i>
-                    </button>
-                </div>
-
-                <div id="lockErrorMessage" class="text-xs font-semibold text-rose-400 hidden flex items-center justify-center space-x-1">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <span>Incorrect passcode. Default code: <strong>EKS2026</strong></span>
-                </div>
-
-                <!-- Remember Session Option -->
-                <div class="flex items-center justify-center space-x-2 text-xs text-slate-400 py-1">
-                    <input type="checkbox" id="rememberSessionCheck" class="rounded border-slate-700 bg-slate-950 text-gold-500 focus:ring-gold-500 h-4 w-4">
-                    <label for="rememberSessionCheck" class="cursor-pointer select-none">Remember access on this device</label>
-                </div>
-
-                <!-- Action Button -->
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-gold-500 to-amber-500 hover:from-gold-600 hover:to-amber-600 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-gold-500/20 transition flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-key"></i>
-                    <span>Unlock Suite</span>
-                </button>
-            </form>
-
-            <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
-                Default Access Code: <span class="font-mono text-gold-400 font-bold">EKS2026</span>
-            </div>
+  <!-- TOP HEADER / NAV BAR -->
+  <header class="bg-eks-800 border-b border-eks-700/60 sticky top-0 z-30 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-eks-gold to-eks-cyan p-0.5 shadow-md">
+          <div class="w-full h-full bg-eks-900 rounded-[10px] flex items-center justify-center">
+            <i class="fa-solid fa-bolt text-eks-gold text-lg"></i>
+          </div>
         </div>
+        <div>
+          <h1 class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-eks-cyan bg-clip-text text-transparent">
+            EKS Engineering Suite
+          </h1>
+          <p class="text-[10px] text-slate-400 font-medium">BS 7671 & IEC Standard Compliant</p>
+        </div>
+      </div>
+
+      <!-- Header Controls & License Badge -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <!-- License Status Badge -->
+        <div id="licenseBadge" class="hidden sm:flex items-center space-x-2 bg-eks-900/80 border border-eks-700 px-3 py-1.5 rounded-lg text-xs font-medium">
+          <span class="w-2 h-2 rounded-full bg-eks-emerald animate-pulse"></span>
+          <span id="licenseUserText" class="text-slate-300">User: Active</span>
+          <span class="text-slate-500">|</span>
+          <span id="licenseDaysText" class="text-eks-gold font-semibold">30 Days</span>
+        </div>
+
+        <!-- Lock / License Info Button -->
+        <button onclick="showLicenseManager()" class="bg-eks-700 hover:bg-eks-accent text-slate-200 p-2 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 border border-slate-600/50">
+          <i class="fa-solid fa-key text-eks-gold"></i>
+          <span class="hidden sm:inline">License</span>
+        </button>
+
+        <!-- Admin Portal Trigger Button -->
+        <button onclick="promptAdminAccess()" class="bg-gradient-to-r from-eks-gold/20 to-eks-cyan/20 hover:from-eks-gold/30 hover:to-eks-cyan/30 text-eks-gold border border-eks-gold/40 px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1">
+          <i class="fa-solid fa-user-shield"></i>
+          <span class="hidden sm:inline">Admin KeyGen</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Top Navigation Header -->
-    <header class="no-print bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2 sm:space-x-3">
-                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 font-bold text-lg sm:text-xl">
-                    <i class="fa-solid fa-bolt"></i>
-                </div>
-                <div>
-                    <h1 class="text-base sm:text-lg font-bold text-white tracking-wide flex items-center space-x-1.5">
-                        <span>EKS Suite</span>
-                        <span class="text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full bg-gold-500/20 text-gold-400 border border-gold-500/30 font-mono">PRO</span>
-                    </h1>
-                    <p class="text-[10px] sm:text-xs text-slate-400 truncate max-w-[150px] sm:max-w-none">BS 7671 / IEC Electrical Suite</p>
-                </div>
-            </div>
+    <!-- Mobile Sub-Header License Info -->
+    <div id="mobileLicenseBar" class="sm:hidden bg-eks-900/90 border-t border-eks-700/50 px-4 py-1 flex items-center justify-between text-[11px]">
+      <div class="flex items-center space-x-1.5">
+        <span class="w-2 h-2 rounded-full bg-eks-emerald"></span>
+        <span id="mobileUserText" class="text-slate-300">User: Guest</span>
+      </div>
+      <div id="mobileDaysText" class="text-eks-gold font-bold">Valid</div>
+    </div>
+  </header>
 
-            <!-- Mobile & Desktop Action Buttons -->
-            <div class="flex items-center space-x-1.5 sm:space-x-2">
-                <button onclick="saveToLocalStorage()" title="Save Data locally" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1">
-                    <i class="fa-solid fa-floppy-disk text-cyan-400"></i>
-                    <span class="hidden md:inline">Save</span>
-                </button>
-                <button onclick="loadDemoData()" title="Load Pre-filled Demo Data" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1">
-                    <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
-                    <span class="hidden md:inline">Demo</span>
-                </button>
-                <button onclick="exportJSON()" title="Export JSON File" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1">
-                    <i class="fa-solid fa-file-export text-emerald-400"></i>
-                    <span class="hidden md:inline">Export</span>
-                </button>
-                <button onclick="window.print()" title="Print Summary Report" class="hidden sm:flex px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-600/30 transition items-center space-x-1.5">
-                    <i class="fa-solid fa-print"></i>
-                    <span>Print</span>
-                </button>
-                <!-- Lock Suite Button -->
-                <button onclick="lockSuite()" title="Lock Suite (Logout)" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 transition flex items-center space-x-1">
-                    <i class="fa-solid fa-lock"></i>
-                    <span class="hidden sm:inline">Lock</span>
-                </button>
-            </div>
+  <!-- NAVIGATION TABS (Mobile Scrollable) -->
+  <nav class="bg-eks-800/80 border-b border-eks-700/40 sticky top-16 z-20 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6">
+      <div class="flex space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar py-2 text-xs sm:text-sm font-medium">
+        <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="tab-btn px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap bg-eks-cyan text-eks-900 font-bold shadow-md transition">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="switchTab('lumen')" id="tab-btn-lumen" class="tab-btn px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap text-slate-300 hover:bg-eks-700/60 transition">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span>Lighting (Lumen)</span>
+        </button>
+        <button onclick="switchTab('dbload')" id="tab-btn-dbload" class="tab-btn px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap text-slate-300 hover:bg-eks-700/60 transition">
+          <i class="fa-solid fa-network-wired"></i>
+          <span>DB Load Balancing</span>
+        </button>
+        <button onclick="switchTab('cable')" id="tab-btn-cable" class="tab-btn px-4 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap text-slate-300 hover:bg-eks-700/60 transition">
+          <i class="fa-solid fa-plug"></i>
+          <span>Cable Sizing (BS 7671)</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active space-y-6">
+      <div class="bg-eks-800/70 border border-eks-700/60 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-city text-eks-cyan"></i> Project Overview & IEC/BS Compliance
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Real-time status of electrical design calculations and active license context.</p>
+          </div>
+          <button onclick="switchTab('cable')" class="w-full md:w-auto px-4 py-2 bg-gradient-to-r from-eks-cyan to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-eks-900 font-bold text-xs rounded-xl shadow-lg transition">
+            + Start Cable Calculation
+          </button>
         </div>
 
-        <!-- Mobile Module Navigation Tabs -->
-        <nav class="no-print flex md:hidden overflow-x-auto border-t border-slate-800/80 bg-slate-950/60 px-2 py-1.5 space-x-1 text-xs">
-            <button onclick="scrollToSection('sec-dashboard')" class="flex-none px-3 py-1.5 rounded-lg bg-slate-800 text-cyan-400 font-medium flex items-center space-x-1.5">
-                <i class="fa-solid fa-chart-pie"></i>
-                <span>Dashboard</span>
-            </button>
-            <button onclick="scrollToSection('sec-lighting')" class="flex-none px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-medium flex items-center space-x-1.5">
-                <i class="fa-regular fa-lightbulb text-amber-400"></i>
-                <span>1. Lighting</span>
-            </button>
-            <button onclick="scrollToSection('sec-db')" class="flex-none px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-medium flex items-center space-x-1.5">
-                <i class="fa-solid fa-network-wired text-cyan-400"></i>
-                <span>2. DB Schedule</span>
-            </button>
-            <button onclick="scrollToSection('sec-vd')" class="flex-none px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-medium flex items-center space-x-1.5">
-                <i class="fa-solid fa-plug text-emerald-400"></i>
-                <span>3. Cable & VD</span>
-            </button>
-        </nav>
-    </header>
-
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
-
-        <!-- 1. EXECUTIVE PROJECT DASHBOARD -->
-        <section id="sec-dashboard" class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-60 h-60 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
-                <div>
-                    <h2 class="text-base sm:text-xl font-bold text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-pie text-brand-500"></i>
-                        <span>Executive Project Dashboard</span>
-                    </h2>
-                    <p class="text-[11px] sm:text-xs text-slate-400">Global system parameters and live key performance metrics.</p>
-                </div>
-
-                <!-- Overall System Status Badge -->
-                <div class="flex items-center justify-between sm:justify-start space-x-3 bg-slate-950/60 p-2 sm:p-2.5 rounded-xl border border-slate-800">
-                    <span class="text-[10px] sm:text-xs font-semibold text-slate-400">STATUS:</span>
-                    <div id="sysComplianceBadge" class="px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center space-x-1.5">
-                        <i class="fa-solid fa-circle-check"></i>
-                        <span>PASS (COMPLIANT)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Project Inputs Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mt-4 no-print">
-                <div>
-                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Project Name</label>
-                    <input type="text" id="projName" value="Time Square Tower - Block B" oninput="calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 transition">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Lead Engineer</label>
-                    <input type="text" id="engineerName" value="EKS Lead Engineer" oninput="calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 transition">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Voltage System</label>
-                    <select id="voltageSystem" onchange="calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 transition font-mono">
-                        <option value="400">3-Phase 400V AC (50Hz)</option>
-                        <option value="230">Single Phase 230V AC (50Hz)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Power Factor ($\cos \phi$)</label>
-                    <input type="number" id="powerFactor" step="0.01" min="0.5" max="1.0" value="0.85" oninput="calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 transition font-mono">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-medium text-slate-400 mb-1">Grid Frequency</label>
-                    <input type="text" value="50 Hz" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-400 font-mono">
-                </div>
-            </div>
-
-            <!-- Dynamic KPI Cards -->
-            <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mt-5">
-                <!-- KPI 1 -->
-                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800">
-                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Total Connected Load</span>
-                    <div class="flex items-baseline space-x-1">
-                        <span id="kpiConnectedLoad" class="text-lg sm:text-2xl font-bold font-mono text-cyan-400">0.00</span>
-                        <span class="text-xs font-bold text-slate-400">kW</span>
-                    </div>
-                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">Sum of DB & Light loads</span>
-                </div>
-
-                <!-- KPI 2 -->
-                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800">
-                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Total Demand Load</span>
-                    <div class="flex items-baseline space-x-1">
-                        <span id="kpiDemandLoad" class="text-lg sm:text-2xl font-bold font-mono text-emerald-400">0.00</span>
-                        <span class="text-xs font-bold text-slate-400">kW</span>
-                    </div>
-                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">Factored Peak Power Demand</span>
-                </div>
-
-                <!-- KPI 3 -->
-                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800">
-                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Calculated Current</span>
-                    <div class="flex items-baseline space-x-1">
-                        <span id="kpiMainCurrent" class="text-lg sm:text-2xl font-bold font-mono text-amber-400">0.00</span>
-                        <span class="text-xs font-bold text-slate-400">Amps</span>
-                    </div>
-                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">Main Incomer Operating Current</span>
-                </div>
-
-                <!-- KPI 4 -->
-                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800">
-                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Rec. Main Breaker</span>
-                    <div class="flex items-baseline space-x-1">
-                        <span id="kpiBreakerRating" class="text-lg sm:text-2xl font-bold font-mono text-indigo-400">0</span>
-                        <span class="text-xs font-bold text-slate-400">A MCCB</span>
-                    </div>
-                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">Standard Rated Breaker Rating</span>
-                </div>
-
-                <!-- KPI 5 -->
-                <div class="bg-slate-950/80 rounded-xl p-3 sm:p-4 border border-slate-800 col-span-2 lg:col-span-1">
-                    <span class="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Max Feeder Voltage Drop</span>
-                    <div class="flex items-baseline space-x-1">
-                        <span id="kpiMaxVD" class="text-lg sm:text-2xl font-bold font-mono text-rose-400">0.00</span>
-                        <span class="text-xs font-bold text-slate-400">%</span>
-                    </div>
-                    <span class="text-[9px] sm:text-[10px] text-slate-500 mt-0.5 block">BS 7671 Limit $\le 4.0\%$</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. LUMEN METHOD LIGHTING CALCULATOR -->
-        <section id="sec-lighting" class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
-                <div>
-                    <h2 class="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
-                        <i class="fa-regular fa-lightbulb text-amber-400"></i>
-                        <span>1. Indoor Lighting Calculator (Lumen Method Engine)</span>
-                    </h2>
-                    <p class="text-[11px] sm:text-xs text-slate-400">Formula: $N = \frac{E \times A}{F \times UF \times MF}$. Standard illuminance calculations.</p>
-                </div>
-                <button onclick="addLightingRow()" class="no-print self-start sm:self-auto px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white transition flex items-center space-x-1 shadow-md">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add Room Space</span>
-                </button>
-            </div>
-
-            <!-- Table Container with Horizontal Scroll on Mobile -->
-            <div class="overflow-x-auto mt-4 border border-slate-800/80 rounded-xl">
-                <table class="w-full text-left text-xs text-slate-300 min-w-[750px]">
-                    <thead class="bg-slate-950 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
-                        <tr>
-                            <th class="p-2.5 min-w-[140px]">Room / Space</th>
-                            <th class="p-2.5 w-24">Length (m)</th>
-                            <th class="p-2.5 w-24">Width (m)</th>
-                            <th class="p-2.5 w-24">Area (m²)</th>
-                            <th class="p-2.5 min-w-[130px]">Target Lux Preset</th>
-                            <th class="p-2.5 w-20">U.F</th>
-                            <th class="p-2.5 w-20">M.F</th>
-                            <th class="p-2.5 w-28">Lumens (lm)</th>
-                            <th class="p-2.5 w-24">Watts/Fixt</th>
-                            <th class="p-2.5 w-24">Power (kW)</th>
-                            <th class="p-2.5 w-10 text-center no-print">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lightingTbody" class="divide-y divide-slate-800/60 font-mono bg-slate-950/40">
-                        <!-- Dynamic Rows Injected Here -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Lighting Summary Bar -->
-            <div class="mt-4 p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
-                    <span>Total Area: <strong id="totalLightArea" class="text-cyan-400 font-mono">0.00 m²</strong></span>
-                    <span>Total Lumens Needed: <strong id="totalLightLumens" class="text-amber-400 font-mono">0 lm</strong></span>
-                </div>
-                <div>
-                    <span>Total Lighting Power Load: <strong id="totalLightPower" class="text-emerald-400 font-mono">0.00 kW</strong></span>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. DISTRIBUTION BOARD LOAD SCHEDULE & PHASE BALANCING -->
-        <section id="sec-db" class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
-                <div>
-                    <h2 class="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-network-wired text-cyan-400"></i>
-                        <span>2. DB Load Schedule & 3-Phase Balancing System</span>
-                    </h2>
-                    <p class="text-[11px] sm:text-xs text-slate-400">Assign electrical loads to Phase R, Y, B and calculate maximum demand & current.</p>
-                </div>
-                <button onclick="addDBRow()" class="no-print self-start sm:self-auto px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white transition flex items-center space-x-1 shadow-md">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add Circuit</span>
-                </button>
-            </div>
-
-            <!-- Table Container with Horizontal Scroll -->
-            <div class="overflow-x-auto mt-4 border border-slate-800/80 rounded-xl">
-                <table class="w-full text-left text-xs text-slate-300 min-w-[900px]">
-                    <thead class="bg-slate-950 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
-                        <tr>
-                            <th class="p-2.5 w-24">Cct Ref</th>
-                            <th class="p-2.5 min-w-[150px]">Description</th>
-                            <th class="p-2.5 w-24">Rating (W)</th>
-                            <th class="p-2.5 w-16">Qty</th>
-                            <th class="p-2.5 w-24">Total (W)</th>
-                            <th class="p-2.5 w-24">Phase</th>
-                            <th class="p-2.5 w-20">D.F</th>
-                            <th class="p-2.5 w-24">Demand (W)</th>
-                            <th class="p-2.5 w-20">Current (A)</th>
-                            <th class="p-2.5 w-24">MCB Size</th>
-                            <th class="p-2.5 min-w-[110px]">Cable Type</th>
-                            <th class="p-2.5 w-10 text-center no-print">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dbTbody" class="divide-y divide-slate-800/60 font-mono bg-slate-950/40">
-                        <!-- Dynamic Rows Injected Here -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 3-Phase Balancing Live Visualizer -->
-            <div class="mt-6 p-4 bg-slate-950/80 rounded-xl border border-slate-800 space-y-3">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
-                        <i class="fa-solid fa-scale-balanced text-amber-400"></i>
-                        <span>3-Phase Load Distribution & Balance Monitor</span>
-                    </span>
-                    <span id="phaseUnbalancePercent" class="text-xs font-mono font-bold text-emerald-400">Unbalance: 0.0% (BALANCED)</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
-                    <!-- Phase Red -->
-                    <div class="space-y-1 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
-                        <div class="flex justify-between text-rose-400 font-semibold">
-                            <span>Phase R (Red):</span>
-                            <span id="phaseRVal">0.00 kW</span>
-                        </div>
-                        <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden">
-                            <div id="barPhaseR" class="bg-rose-500 h-full transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Phase Yellow -->
-                    <div class="space-y-1 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
-                        <div class="flex justify-between text-amber-400 font-semibold">
-                            <span>Phase Y (Yellow):</span>
-                            <span id="phaseYVal">0.00 kW</span>
-                        </div>
-                        <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden">
-                            <div id="barPhaseY" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Phase Blue -->
-                    <div class="space-y-1 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
-                        <div class="flex justify-between text-sky-400 font-semibold">
-                            <span>Phase B (Blue):</span>
-                            <span id="phaseBVal">0.00 kW</span>
-                        </div>
-                        <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden">
-                            <div id="barPhaseB" class="bg-sky-400 h-full transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. CABLE VOLTAGE DROP & SIZING CALCULATOR -->
-        <section id="sec-vd" class="card-box bg-slate-900/90 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
-                <div>
-                    <h2 class="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-plug text-emerald-400"></i>
-                        <span>3. Feeder Cable Sizing & Voltage Drop Engine</span>
-                    </h2>
-                    <p class="text-[11px] sm:text-xs text-slate-400">Formula: $V_d = \frac{I_L \times L \times (mV/A/m)}{1000}$. BS 7671 voltage drop compliance tool.</p>
-                </div>
-                <button onclick="addVDRow()" class="no-print self-start sm:self-auto px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center space-x-1 shadow-md">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add Feeder Cable</span>
-                </button>
-            </div>
-
-            <!-- Table Container with Horizontal Scroll -->
-            <div class="overflow-x-auto mt-4 border border-slate-800/80 rounded-xl">
-                <table class="w-full text-left text-xs text-slate-300 min-w-[950px]">
-                    <thead class="bg-slate-950 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800 font-mono">
-                        <tr>
-                            <th class="p-2.5 w-24">Feeder Ref</th>
-                            <th class="p-2.5 w-28">From Node</th>
-                            <th class="p-2.5 w-28">To Node</th>
-                            <th class="p-2.5 w-24">Load (kW)</th>
-                            <th class="p-2.5 w-20">Current (A)</th>
-                            <th class="p-2.5 w-24">Length (m)</th>
-                            <th class="p-2.5 min-w-[150px]">Cable Size (Cu/XLPE)</th>
-                            <th class="p-2.5 w-24">mV/A/m</th>
-                            <th class="p-2.5 w-24">VD (Volts)</th>
-                            <th class="p-2.5 w-20">VD (%)</th>
-                            <th class="p-2.5 w-28 text-center">Status</th>
-                            <th class="p-2.5 w-10 text-center no-print">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="vdTbody" class="divide-y divide-slate-800/60 font-mono bg-slate-950/40">
-                        <!-- Dynamic Rows Injected Here -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer Container -->
-    <footer class="no-print bg-slate-900 border-t border-slate-800 mt-8 py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2 text-center sm:text-left">
-            <div>
-                <span>© 2026 EKS Professional Engineering Suite. Compliant with IEC 60364 & BS 7671.</span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <span class="hover:text-slate-300 transition cursor-pointer" onclick="loadDemoData()"><i class="fa-solid fa-rotate-right mr-1"></i>Reset Demo</span>
-                <span class="hover:text-slate-300 transition cursor-pointer" onclick="clearAllData()"><i class="fa-solid fa-trash mr-1"></i>Clear All</span>
-            </div>
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-eks-900/80 border border-eks-700/80 p-4 rounded-xl">
+            <div class="text-slate-400 text-xs font-semibold">Active User</div>
+            <div id="dashUserVal" class="text-base font-bold text-eks-cyan mt-1 truncate">Guest User</div>
+            <div class="text-[10px] text-slate-500 mt-1">Verified Key Session</div>
+          </div>
+          <div class="bg-eks-900/80 border border-eks-700/80 p-4 rounded-xl">
+            <div class="text-slate-400 text-xs font-semibold">License Validity</div>
+            <div id="dashDaysVal" class="text-base font-bold text-eks-gold mt-1">30 Days</div>
+            <div class="text-[10px] text-slate-500 mt-1">Auto-expires on end date</div>
+          </div>
+          <div class="bg-eks-900/80 border border-eks-700/80 p-4 rounded-xl">
+            <div class="text-slate-400 text-xs font-semibold">Design Code</div>
+            <div class="text-base font-bold text-eks-emerald mt-1">BS 7671:2018</div>
+            <div class="text-[10px] text-slate-500 mt-1">+ A2:2022 Amendment</div>
+          </div>
+          <div class="bg-eks-900/80 border border-eks-700/80 p-4 rounded-xl">
+            <div class="text-slate-400 text-xs font-semibold">System Nominal</div>
+            <div class="text-base font-bold text-white mt-1">400V / 230V</div>
+            <div class="text-[10px] text-slate-500 mt-1">50 Hz Three Phase</div>
+          </div>
         </div>
-    </footer>
+      </div>
 
-    <!-- JavaScript Calculation Engine & Passcode Access Control System -->
-    <script>
-        // Security Settings
-        const DEFAULT_PASSCODE = "EKS2026";
-        const SESSION_KEY = "eks_session_authenticated";
+      <!-- Quick Feature Access Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div onclick="switchTab('lumen')" class="bg-eks-800/40 hover:bg-eks-800/80 border border-eks-700/60 p-5 rounded-2xl cursor-pointer transition group">
+          <div class="w-12 h-12 bg-eks-gold/10 rounded-xl flex items-center justify-center text-eks-gold text-xl group-hover:scale-110 transition">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mt-4">Indoor Lighting Calculation</h3>
+          <p class="text-xs text-slate-400 mt-1">Lumen Method computation, Coefficient of Utilization (CU), and Fitting array recommendation.</p>
+        </div>
 
-        // Preset Lux Levels
-        const LUX_PRESETS = {
-            'office': 500,
-            'conference': 400,
-            'corridor': 150,
-            'server': 500,
-            'storage': 200,
-            'custom': 300
-        };
+        <div onclick="switchTab('dbload')" class="bg-eks-800/40 hover:bg-eks-800/80 border border-eks-700/60 p-5 rounded-2xl cursor-pointer transition group">
+          <div class="w-12 h-12 bg-eks-cyan/10 rounded-xl flex items-center justify-center text-eks-cyan text-xl group-hover:scale-110 transition">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mt-4">DB Load Schedule & Balancing</h3>
+          <p class="text-xs text-slate-400 mt-1">Distribute Single Phase & 3-Phase loads across Red, Yellow, and Blue phases to minimize neutral current.</p>
+        </div>
 
-        // Cable Database (Copper / XLPE / PVC 3-Phase mV/A/m Values per BS 7671)
-        const CABLE_DATABASE = [
-            { size: '2.5 mm²', mv: 18.0 },
-            { size: '4.0 mm²', mv: 11.0 },
-            { size: '6.0 mm²', mv: 7.3 },
-            { size: '10.0 mm²', mv: 4.4 },
-            { size: '16.0 mm²', mv: 2.8 },
-            { size: '25.0 mm²', mv: 1.75 },
-            { size: '35.0 mm²', mv: 1.25 },
-            { size: '50.0 mm²', mv: 0.93 },
-            { size: '70.0 mm²', mv: 0.63 },
-            { size: '95.0 mm²', mv: 0.46 },
-            { size: '120.0 mm²', mv: 0.36 },
-            { size: '150.0 mm²', mv: 0.29 },
-            { size: '185.0 mm²', mv: 0.23 },
-            { size: '240.0 mm²', mv: 0.18 },
-            { size: '300.0 mm²', mv: 0.145 }
-        ];
+        <div onclick="switchTab('cable')" class="bg-eks-800/40 hover:bg-eks-800/80 border border-eks-700/60 p-5 rounded-2xl cursor-pointer transition group">
+          <div class="w-12 h-12 bg-eks-emerald/10 rounded-xl flex items-center justify-center text-eks-emerald text-xl group-hover:scale-110 transition">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mt-4">Cable Sizing & Voltage Drop</h3>
+          <p class="text-xs text-slate-400 mt-1">Automatic current capacity (Iz) calculation, de-rating factors, and max length limits.</p>
+        </div>
+      </div>
+    </div>
 
-        // MCB Standard Ratings
-        const STANDARD_BREAKERS = [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 630, 800, 1000, 1250, 1600];
+    <!-- TAB 2: LUMEN METHOD LIGHTING CALCULATOR -->
+    <div id="tab-lumen" class="tab-content space-y-6">
+      <div class="bg-eks-800/70 border border-eks-700/60 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb text-eks-gold"></i> Lumen Method Indoor Lighting Calculator
+        </h2>
 
-        // Global State Arrays
-        let lightingRows = [];
-        let dbRows = [];
-        let vdRows = [];
-
-        // Application Initialization & Security Check
-        window.addEventListener('DOMContentLoaded', () => {
-            checkAuthStatus();
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Input Form -->
+          <div class="lg:col-span-5 space-y-4 bg-eks-900/60 p-4 rounded-xl border border-eks-700/50">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-eks-gold">Room & Fitting Parameters</h3>
             
-            const savedData = localStorage.getItem('eks_suite_data');
-            if (savedData) {
-                try {
-                    const parsed = JSON.parse(savedData);
-                    lightingRows = parsed.lightingRows || [];
-                    dbRows = parsed.dbRows || [];
-                    vdRows = parsed.vdRows || [];
-                    if (parsed.projName) document.getElementById('projName').value = parsed.projName;
-                    if (parsed.engineerName) document.getElementById('engineerName').value = parsed.engineerName;
-                    if (parsed.voltageSystem) document.getElementById('voltageSystem').value = parsed.voltageSystem;
-                    if (parsed.powerFactor) document.getElementById('powerFactor').value = parsed.powerFactor;
-                } catch(e) {
-                    loadDemoData();
-                }
-            } else {
-                loadDemoData();
-            }
-            renderAll();
-        });
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="block text-slate-400 mb-1">Room Length (m)</label>
+                <input type="number" id="lumLength" value="10" step="0.5" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-gold outline-none">
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Room Width (m)</label>
+                <input type="number" id="lumWidth" value="8" step="0.5" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-gold outline-none">
+              </div>
+            </div>
 
-        // 🔒 Security Passcode Functions
-        function checkAuthStatus() {
-            const isAuth = localStorage.getItem(SESSION_KEY);
-            const lockScreen = document.getElementById('lockScreen');
-            if (isAuth === 'true') {
-                lockScreen.classList.add('hidden');
-            } else {
-                lockScreen.classList.remove('hidden');
-            }
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="block text-slate-400 mb-1">Target Lux (E)</label>
+                <input type="number" id="lumTargetLux" value="500" step="50" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-gold outline-none">
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Lumens / Fitting</label>
+                <input type="number" id="lumPerFitting" value="4000" step="100" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-gold outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="block text-slate-400 mb-1">Util. Factor (UF/CU)</label>
+                <input type="number" id="lumUF" value="0.65" step="0.05" min="0.1" max="1" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-gold outline-none">
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Maint. Factor (MF)</label>
+                <input type="number" id="lumMF" value="0.80" step="0.05" min="0.1" max="1" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-gold outline-none">
+              </div>
+            </div>
+
+            <button onclick="calculateLighting()" class="w-full bg-eks-gold hover:bg-yellow-500 text-eks-900 font-bold py-2.5 rounded-xl text-xs transition shadow-lg">
+              Calculate Required Fittings
+            </button>
+          </div>
+
+          <!-- Output Panel -->
+          <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+            <div class="bg-eks-900/90 border border-eks-700/80 p-5 rounded-xl space-y-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-eks-cyan">Calculation Results</h3>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div class="bg-eks-800/80 p-3 rounded-lg border border-eks-700">
+                  <div class="text-[11px] text-slate-400">Total Area</div>
+                  <div id="resArea" class="text-lg font-bold text-white">80 m²</div>
+                </div>
+                <div class="bg-eks-800/80 p-3 rounded-lg border border-eks-700">
+                  <div class="text-[11px] text-slate-400">Total Lumens</div>
+                  <div id="resTotalLumens" class="text-lg font-bold text-eks-gold">76,923 lm</div>
+                </div>
+                <div class="bg-eks-800/80 p-3 rounded-lg border border-eks-700 col-span-2 sm:col-span-1">
+                  <div class="text-[11px] text-slate-400">Total Fittings</div>
+                  <div id="resFittings" class="text-xl font-extrabold text-eks-cyan">20 Fittings</div>
+                </div>
+              </div>
+
+              <!-- Suggested Grid Layout -->
+              <div class="bg-eks-800/50 p-4 rounded-xl border border-eks-700/60">
+                <h4 class="text-xs font-semibold text-slate-300 mb-2">Recommended Grid Layout:</h4>
+                <div id="resGridLayout" class="text-sm font-bold text-eks-gold">
+                  5 Columns x 4 Rows (Grid Spacing ~ 2.0m x 2.0m)
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">Calculated based on aspect ratio optimization for uniform illuminance.</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 text-[11px] text-slate-400">
+              <span class="font-bold text-slate-300">Formula Used:</span> N = (Target Lux x Area) / (Lumens per Fitting x UF x MF)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: DB LOAD SCHEDULE & PHASE BALANCING -->
+    <div id="tab-dbload" class="tab-content space-y-6">
+      <div class="bg-eks-800/70 border border-eks-700/60 rounded-2xl p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-eks-cyan"></i> DB Load Schedule & Phase Balancing
+            </h2>
+            <p class="text-xs text-slate-400">Manage 1-Phase & 3-Phase circuits and balance load across Red, Yellow, Blue phases.</p>
+          </div>
+          <button onclick="addCircuitRow()" class="px-3 py-1.5 bg-eks-cyan/20 text-eks-cyan hover:bg-eks-cyan/30 border border-eks-cyan/40 rounded-lg text-xs font-semibold transition">
+            + Add Circuit
+          </button>
+        </div>
+
+        <!-- Circuit Input Table (Responsive Scroll) -->
+        <div class="overflow-x-auto no-scrollbar border border-eks-700/60 rounded-xl mb-6">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-eks-900 text-slate-400 uppercase tracking-wider">
+              <tr>
+                <th class="p-3">Circuit Ref</th>
+                <th class="p-3">Load Description</th>
+                <th class="p-3">Load (kW)</th>
+                <th class="p-3">PF</th>
+                <th class="p-3">Phase</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="circuitTableBody" class="divide-y divide-eks-700/50 bg-eks-800/40">
+              <!-- Default Rows Dynamically Inserted -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Phase Balance Visual Output -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-red-950/40 border border-red-700/50 p-4 rounded-xl">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-red-400">Red Phase (L1)</span>
+              <span id="loadR" class="text-lg font-extrabold text-white">0.0 kW</span>
+            </div>
+            <div class="w-full bg-red-900/30 rounded-full h-2.5 mt-2 overflow-hidden">
+              <div id="barR" class="bg-red-500 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="bg-yellow-950/40 border border-yellow-700/50 p-4 rounded-xl">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-yellow-400">Yellow Phase (L2)</span>
+              <span id="loadY" class="text-lg font-extrabold text-white">0.0 kW</span>
+            </div>
+            <div class="w-full bg-yellow-900/30 rounded-full h-2.5 mt-2 overflow-hidden">
+              <div id="barY" class="bg-yellow-500 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="bg-blue-950/40 border border-blue-700/50 p-4 rounded-xl">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-blue-400">Blue Phase (L3)</span>
+              <span id="loadB" class="text-lg font-extrabold text-white">0.0 kW</span>
+            </div>
+            <div class="w-full bg-blue-900/30 rounded-full h-2.5 mt-2 overflow-hidden">
+              <div id="barB" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 p-4 bg-eks-900/80 rounded-xl border border-eks-700 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div>
+            <span class="text-xs text-slate-400">Estimated Unbalance Ratio: </span>
+            <span id="unbalanceRatio" class="text-sm font-bold text-eks-gold">0%</span>
+          </div>
+          <button onclick="autoBalancePhases()" class="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-eks-gold to-yellow-600 text-eks-900 font-bold text-xs rounded-xl shadow">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Auto-Balance Loads
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: BS 7671 CABLE SIZING & VOLTAGE DROP -->
+    <div id="tab-cable" class="tab-content space-y-6">
+      <div class="bg-eks-800/70 border border-eks-700/60 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-plug text-eks-emerald"></i> BS 7671 Cable Sizing & Voltage Drop Engine
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Input Parameters -->
+          <div class="lg:col-span-5 space-y-4 bg-eks-900/60 p-4 rounded-xl border border-eks-700/50">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-eks-emerald">Circuit Specification</h3>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="block text-slate-400 mb-1">Load Current (Ib) [A]</label>
+                <input type="number" id="cableIb" value="32" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-emerald outline-none">
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">MCB Rating (In) [A]</label>
+                <input type="number" id="cableIn" value="40" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-emerald outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="block text-slate-400 mb-1">Route Length (m)</label>
+                <input type="number" id="cableLength" value="45" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-emerald outline-none">
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Supply System</label>
+                <select id="cablePhase" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-emerald outline-none">
+                  <option value="1P">230V 1-Phase</option>
+                  <option value="3P">400V 3-Phase</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="block text-slate-400 mb-1">Ambient Temp (Ca)</label>
+                <select id="cableCa" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-emerald outline-none">
+                  <option value="1.0">30 °C (1.0)</option>
+                  <option value="0.94">35 °C (0.94)</option>
+                  <option value="0.87">40 °C (0.87)</option>
+                  <option value="0.79">45 °C (0.79)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Grouping Factor (Cg)</label>
+                <select id="cableCg" class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-white focus:border-eks-emerald outline-none">
+                  <option value="1.0">Single Circuit (1.0)</option>
+                  <option value="0.8">2 Circuits (0.80)</option>
+                  <option value="0.7">3 Circuits (0.70)</option>
+                  <option value="0.65">4 Circuits (0.65)</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="calculateCable()" class="w-full bg-eks-emerald hover:bg-emerald-600 text-eks-900 font-bold py-2.5 rounded-xl text-xs transition shadow-lg">
+              Verify Cable & Voltage Drop
+            </button>
+          </div>
+
+          <!-- Output Panel -->
+          <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+            <div class="bg-eks-900/90 border border-eks-700/80 p-5 rounded-xl space-y-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-eks-cyan">Verification Output</h3>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div class="bg-eks-800/80 p-3 rounded-lg border border-eks-700">
+                  <div class="text-[11px] text-slate-400">Req Minimum Iz</div>
+                  <div id="resCableIz" class="text-lg font-bold text-eks-gold">50.0 A</div>
+                </div>
+                <div class="bg-eks-800/80 p-3 rounded-lg border border-eks-700">
+                  <div class="text-[11px] text-slate-400">Recommended Cable</div>
+                  <div id="resCableSize" class="text-lg font-bold text-eks-emerald">6.0 mm² Cu</div>
+                </div>
+              </div>
+
+              <div class="bg-eks-800/50 p-4 rounded-xl border border-eks-700/60 space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-300">Voltage Drop (Vd):</span>
+                  <span id="resVdVal" class="font-bold text-white">4.86 V</span>
+                </div>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-300">Voltage Drop (%):</span>
+                  <span id="resVdPercent" class="font-bold text-eks-emerald">2.11 % (Max Allowable 4%)</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden mt-1">
+                  <div id="vdBar" class="bg-eks-emerald h-2 rounded-full" style="width: 40%"></div>
+                </div>
+              </div>
+
+              <div id="cableStatusBox" class="p-3 rounded-lg bg-emerald-950/40 border border-emerald-700/60 text-xs text-emerald-300 font-medium">
+                ✓ Cable meets BS 7671 current capacity and voltage drop requirements.
+              </div>
+            </div>
+
+            <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 text-[11px] text-slate-400">
+              <span class="font-bold text-slate-300">Compliance Standard:</span> BS 7671 Table 4D2A / 4D5 (XLPE/PVC Insulated Copper Conductors).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- USER LOCK SCREEN MODAL (Initial Access or Expiry) -->
+  <div id="lockModal" class="fixed inset-0 z-50 bg-eks-900/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-eks-800 border border-eks-700 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative space-y-5">
+      
+      <!-- Lock Header -->
+      <div class="text-center space-y-2">
+        <div class="w-14 h-14 bg-eks-gold/10 border border-eks-gold/30 rounded-2xl flex items-center justify-center mx-auto text-eks-gold text-2xl">
+          <i class="fa-solid fa-user-lock"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white">User License Lock</h3>
+        <p class="text-xs text-slate-400">Enter your assigned Registered Username and License Key to activate session access.</p>
+      </div>
+
+      <!-- Lock Input Form -->
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-300 font-medium mb-1">User / Client Name</label>
+          <input type="text" id="inputUsername" placeholder="e.g. Min Htet Kyaw" class="w-full bg-eks-900 border border-eks-700 rounded-xl p-3 text-white focus:border-eks-gold outline-none">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-medium mb-1">License Key</label>
+          <input type="text" id="inputLicenseKey" placeholder="EKS-XXXX-XXXX-XXXX" class="w-full bg-eks-900 border border-eks-700 rounded-xl p-3 text-white focus:border-eks-gold outline-none uppercase font-mono tracking-wider">
+        </div>
+
+        <button onclick="submitUserLicense()" class="w-full bg-gradient-to-r from-eks-gold to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-eks-900 font-extrabold py-3 rounded-xl text-sm transition shadow-lg">
+          Verify & Unlock Suite
+        </button>
+      </div>
+
+      <!-- Helper / Admin Contact Note -->
+      <div class="border-t border-eks-700/60 pt-4 text-center">
+        <p class="text-[11px] text-slate-400">
+          Don't have a key? Contact software administrator or click 
+          <button onclick="promptAdminAccess()" class="text-eks-cyan underline font-semibold">Admin KeyGen</button>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN LICENSE KEY GENERATOR MODAL -->
+  <div id="adminModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-eks-800 border border-eks-gold/40 rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-5 relative">
+      
+      <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-eks-gold/20 text-eks-gold rounded-xl flex items-center justify-center text-lg">
+          <i class="fa-solid fa-key"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white">Owner Admin Portal</h3>
+          <p class="text-xs text-slate-400">Generate deterministic user-bound license keys.</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-xs bg-eks-900/70 p-4 rounded-xl border border-eks-700/60">
+        <div>
+          <label class="block text-slate-300 mb-1">Assign User / Client Name</label>
+          <input type="text" id="genUsername" placeholder="e.g. Min Htet Kyaw" class="w-full bg-eks-800 border border-eks-700 rounded-xl p-2.5 text-white focus:border-eks-gold outline-none">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1">Validity Duration</label>
+          <select id="genDays" class="w-full bg-eks-800 border border-eks-700 rounded-xl p-2.5 text-white focus:border-eks-gold outline-none">
+            <option value="7">7 Days Trial</option>
+            <option value="30" selected>30 Days (Standard)</option>
+            <option value="90">90 Days (Quarterly)</option>
+            <option value="365">365 Days (Annual)</option>
+            <option value="9999">Lifetime Access</option>
+          </select>
+        </div>
+
+        <button onclick="generateUserKey()" class="w-full bg-gradient-to-r from-eks-cyan to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-eks-900 font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+          Generate Dynamic License Key
+        </button>
+      </div>
+
+      <!-- Generated Key Display Box -->
+      <div id="genResultBox" class="hidden space-y-2 bg-eks-900 p-4 rounded-xl border border-eks-cyan/40">
+        <div class="text-[11px] text-slate-400">Generated License Key:</div>
+        <div class="flex items-center justify-between gap-2">
+          <input type="text" id="outGeneratedKey" readonly class="w-full bg-eks-800 border border-eks-700 rounded-lg p-2 text-eks-cyan font-mono text-xs font-bold tracking-wider outline-none">
+          <button onclick="copyGeneratedKey()" class="px-3 py-2 bg-eks-cyan text-eks-900 font-bold rounded-lg text-xs hover:bg-cyan-300 transition whitespace-nowrap">
+            <i class="fa-solid fa-copy"></i> Copy
+          </button>
+        </div>
+        <div class="text-[10px] text-slate-500 mt-1">
+          Share both the exact <span class="text-slate-300">Username</span> and this <span class="text-slate-300">Key</span> with the client.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2"></div>
+
+  <!-- FOOTER -->
+  <footer class="bg-eks-800 border-t border-eks-700/60 py-4 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div>© 2026 EKS Electrical Engineering Suite. All Rights Reserved.</div>
+      <div class="flex space-x-4">
+        <span class="hover:text-slate-300 transition cursor-pointer" onclick="showLicenseManager()">License Info</span>
+        <span>•</span>
+        <span class="hover:text-slate-300 transition cursor-pointer" onclick="promptAdminAccess()">Admin Portal</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC ENGINE -->
+  <script>
+    // ==========================================
+    // CONSTANTS & STATE MANAGEMENT
+    // ==========================================
+    const ADMIN_PASSCODE = 'EKS-ADMIN-2026'; // Secret key for admin portal
+    const STORAGE_KEY = 'eks_license_data';
+
+    let currentSession = {
+      username: '',
+      key: '',
+      expiryDate: 0,
+      isValid: false
+    };
+
+    // ==========================================
+    // INITIALIZATION & SESSION VERIFICATION
+    // ==========================================
+    window.onload = function() {
+      checkStoredLicense();
+      initDefaultCircuits();
+      calculateLighting();
+      calculateCable();
+    };
+
+    // Simple deterministic Hashing Algorithm for Key Gen
+    function createLicenseHash(username, expireTimestamp) {
+      const rawStr = `EKS_${username.trim().toUpperCase()}_${expireTimestamp}_SALT2026`;
+      let hash = 0;
+      for (let i = 0; i < rawStr.length; i++) {
+        const char = rawStr.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0;
+      }
+      const hex = Math.abs(hash).toString(16).toUpperCase().padStart(8, '0');
+      // Format: EKS-XXXX-DAYS-XXXX
+      return `EKS-${hex.substring(0, 4)}-${hex.substring(4, 8)}`;
+    }
+
+    function generateKeyPayload(username, days) {
+      const daysInt = parseInt(days);
+      const now = new Date().getTime();
+      const expiry = daysInt === 9999 ? 9999999999999 : now + (daysInt * 24 * 60 * 60 * 1000);
+      const hashPart = createLicenseHash(username, expiry);
+      return `${hashPart}-${expiry}`;
+    }
+
+    function verifyKey(username, fullKey) {
+      if (!username || !fullKey) return { valid: false, message: 'Missing fields' };
+      
+      const parts = fullKey.trim().split('-');
+      if (parts.length !== 4 || parts[0] !== 'EKS') {
+        return { valid: false, message: 'Invalid Key Format' };
+      }
+
+      const expiry = parseInt(parts[3]);
+      if (isNaN(expiry)) return { valid: false, message: 'Corrupted Key' };
+
+      const now = new Date().getTime();
+      if (expiry < now) {
+        return { valid: false, message: 'License Key Expired' };
+      }
+
+      const expectedHash = createLicenseHash(username, expiry);
+      const providedHash = `${parts[0]}-${parts[1]}-${parts[2]}`;
+
+      if (expectedHash === providedHash) {
+        const remainingDays = expiry === 9999999999999 ? 'Lifetime' : Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+        return { valid: true, expiry, remainingDays };
+      } else {
+        return { valid: false, message: 'Key does not match Username' };
+      }
+    }
+
+    function checkStoredLicense() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          const data = JSON.parse(stored);
+          const res = verifyKey(data.username, data.key);
+          if (res.valid) {
+            currentSession = { username: data.username, key: data.key, expiryDate: res.expiry, isValid: true };
+            updateLicenseUI(data.username, res.remainingDays);
+            document.getElementById('lockModal').classList.add('hidden');
+            return;
+          }
+        } catch (e) { console.error(e); }
+      }
+      // If invalid or missing, show lock modal
+      document.getElementById('lockModal').classList.remove('hidden');
+    }
+
+    function submitUserLicense() {
+      const user = document.getElementById('inputUsername').value;
+      const key = document.getElementById('inputLicenseKey').value;
+
+      const res = verifyKey(user, key);
+      if (res.valid) {
+        currentSession = { username: user, key: key, expiryDate: res.expiry, isValid: true };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ username: user, key: key }));
+        updateLicenseUI(user, res.remainingDays);
+        document.getElementById('lockModal').classList.add('hidden');
+        showToast('License Verified Successfully!', 'success');
+      } else {
+        showToast(res.message || 'Invalid License Key', 'error');
+      }
+    }
+
+    function updateLicenseUI(user, days) {
+      const daysStr = days === 'Lifetime' ? 'Lifetime' : `${days} Days Left`;
+      document.getElementById('licenseUserText').innerText = `User: ${user}`;
+      document.getElementById('licenseDaysText').innerText = daysStr;
+      
+      document.getElementById('mobileUserText').innerText = `User: ${user}`;
+      document.getElementById('mobileDaysText').innerText = daysStr;
+
+      document.getElementById('dashUserVal').innerText = user;
+      document.getElementById('dashDaysVal').innerText = daysStr;
+      document.getElementById('licenseBadge').classList.remove('hidden');
+    }
+
+    function showLicenseManager() {
+      document.getElementById('lockModal').classList.remove('hidden');
+    }
+
+    // ==========================================
+    // ADMIN PORTAL & GENERATOR LOGIC
+    // ==========================================
+    function promptAdminAccess() {
+      const pass = prompt('Enter Owner Admin Passcode:');
+      if (pass === ADMIN_PASSCODE) {
+        document.getElementById('adminModal').classList.remove('hidden');
+      } else if (pass !== null) {
+        showToast('Incorrect Admin Passcode', 'error');
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+    }
+
+    function generateUserKey() {
+      const username = document.getElementById('genUsername').value;
+      const days = document.getElementById('genDays').value;
+
+      if (!username.trim()) {
+        showToast('Please enter a target username', 'error');
+        return;
+      }
+
+      const generatedKey = generateKeyPayload(username, days);
+      document.getElementById('outGeneratedKey').value = generatedKey;
+      document.getElementById('genResultBox').classList.remove('hidden');
+      showToast('New License Key Generated!', 'success');
+    }
+
+    function copyGeneratedKey() {
+      const input = document.getElementById('outGeneratedKey');
+      input.select();
+      document.execCommand('copy');
+      showToast('License Key copied to clipboard!', 'success');
+    }
+
+    // ==========================================
+    // NAVIGATION TABS
+    // ==========================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-eks-cyan', 'text-eks-900', 'font-bold', 'shadow-md');
+        btn.classList.add('text-slate-300');
+      });
+
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      activeBtn.classList.remove('text-slate-300');
+      activeBtn.classList.add('bg-eks-cyan', 'text-eks-900', 'font-bold', 'shadow-md');
+    }
+
+    // ==========================================
+    // TAB 2: LUMEN METHOD LOGIC
+    // ==========================================
+    function calculateLighting() {
+      const L = parseFloat(document.getElementById('lumLength').value) || 0;
+      const W = parseFloat(document.getElementById('lumWidth').value) || 0;
+      const E = parseFloat(document.getElementById('lumTargetLux').value) || 0;
+      const F = parseFloat(document.getElementById('lumPerFitting').value) || 1;
+      const UF = parseFloat(document.getElementById('lumUF').value) || 1;
+      const MF = parseFloat(document.getElementById('lumMF').value) || 1;
+
+      const area = L * W;
+      const totalLumens = (E * area) / (UF * MF);
+      const fittings = Math.ceil(totalLumens / F);
+
+      // Grid estimation
+      const ratio = L / (W || 1);
+      const cols = Math.ceil(Math.sqrt(fittings * ratio));
+      const rows = Math.ceil(fittings / cols);
+
+      document.getElementById('resArea').innerText = `${area.toFixed(1)} m²`;
+      document.getElementById('resTotalLumens').innerText = `${Math.round(totalLumens).toLocaleString()} lm`;
+      document.getElementById('resFittings').innerText = `${fittings} Fittings`;
+      document.getElementById('resGridLayout').innerText = `${cols} Columns x ${rows} Rows (Spacing ~ ${(L/cols).toFixed(1)}m x ${(W/rows).toFixed(1)}m)`;
+    }
+
+    // ==========================================
+    // TAB 3: DB LOAD BALANCING LOGIC
+    // ==========================================
+    let circuits = [
+      { id: 1, ref: 'C1', name: 'Lighting Circuit 1', kw: 1.5, pf: 0.95, phase: 'R' },
+      { id: 2, ref: 'C2', name: 'Power Sockets 1', kw: 3.0, pf: 0.90, phase: 'Y' },
+      { id: 3, ref: 'C3', name: 'AirCon Unit A', kw: 2.5, pf: 0.85, phase: 'B' },
+      { id: 4, ref: 'C4', name: 'Water Heater', kw: 3.5, pf: 1.00, phase: 'R' }
+    ];
+
+    function initDefaultCircuits() {
+      renderCircuitTable();
+      calculatePhaseTotals();
+    }
+
+    function renderCircuitTable() {
+      const tbody = document.getElementById('circuitTableBody');
+      tbody.innerHTML = '';
+      circuits.forEach((c, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-eks-700/30 transition';
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-eks-gold">${c.ref}</td>
+          <td class="p-3"><input type="text" value="${c.name}" onchange="updateCircuit(${idx}, 'name', this.value)" class="bg-eks-900/80 border border-eks-700 rounded px-2 py-1 text-xs w-full text-white"></td>
+          <td class="p-3"><input type="number" step="0.1" value="${c.kw}" onchange="updateCircuit(${idx}, 'kw', parseFloat(this.value))" class="bg-eks-900/80 border border-eks-700 rounded px-2 py-1 text-xs w-20 text-white"></td>
+          <td class="p-3"><input type="number" step="0.01" value="${c.pf}" onchange="updateCircuit(${idx}, 'pf', parseFloat(this.value))" class="bg-eks-900/80 border border-eks-700 rounded px-2 py-1 text-xs w-16 text-white"></td>
+          <td class="p-3">
+            <select onchange="updateCircuit(${idx}, 'phase', this.value)" class="bg-eks-900/80 border border-eks-700 rounded px-2 py-1 text-xs text-white">
+              <option value="R" ${c.phase === 'R' ? 'selected' : ''}>Red (L1)</option>
+              <option value="Y" ${c.phase === 'Y' ? 'selected' : ''}>Yellow (L2)</option>
+              <option value="B" ${c.phase === 'B' ? 'selected' : ''}>Blue (L3)</option>
+            </select>
+          </td>
+          <td class="p-3 text-right">
+            <button onclick="removeCircuit(${idx})" class="text-eks-rose hover:text-red-400 p-1"><i class="fa-solid fa-trash-can"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addCircuitRow() {
+      const newId = circuits.length + 1;
+      circuits.push({ id: newId, ref: `C${newId}`, name: `New Circuit ${newId}`, kw: 1.0, pf: 0.9, phase: 'R' });
+      renderCircuitTable();
+      calculatePhaseTotals();
+    }
+
+    function removeCircuit(idx) {
+      circuits.splice(idx, 1);
+      renderCircuitTable();
+      calculatePhaseTotals();
+    }
+
+    function updateCircuit(idx, field, val) {
+      circuits[idx][field] = val;
+      calculatePhaseTotals();
+    }
+
+    function calculatePhaseTotals() {
+      let r = 0, y = 0, b = 0;
+      circuits.forEach(c => {
+        if (c.phase === 'R') r += c.kw;
+        if (c.phase === 'Y') y += c.kw;
+        if (c.phase === 'B') b += c.kw;
+      });
+
+      const max = Math.max(r, y, b, 1);
+      document.getElementById('loadR').innerText = `${r.toFixed(2)} kW`;
+      document.getElementById('loadY').innerText = `${y.toFixed(2)} kW`;
+      document.getElementById('loadB').innerText = `${b.toFixed(2)} kW`;
+
+      document.getElementById('barR').style.width = `${(r / max) * 100}%`;
+      document.getElementById('barY').style.width = `${(y / max) * 100}%`;
+      document.getElementById('barB').style.width = `${(b / max) * 100}%`;
+
+      const avg = (r + y + b) / 3;
+      const unbalance = avg === 0 ? 0 : (Math.max(Math.abs(r - avg), Math.abs(y - avg), Math.abs(b - avg)) / avg) * 100;
+      document.getElementById('unbalanceRatio').innerText = `${unbalance.toFixed(1)}%`;
+    }
+
+    function autoBalancePhases() {
+      // Sort circuits by kW descending and greedy assign to lowest phase
+      circuits.sort((a, b) => b.kw - a.kw);
+      let r = 0, y = 0, b = 0;
+      circuits.forEach(c => {
+        if (r <= y && r <= b) {
+          c.phase = 'R';
+          r += c.kw;
+        } else if (y <= r && y <= b) {
+          c.phase = 'Y';
+          y += c.kw;
+        } else {
+          c.phase = 'B';
+          b += c.kw;
         }
+      });
+      renderCircuitTable();
+      calculatePhaseTotals();
+      showToast('Loads balanced automatically across phases!', 'success');
+    }
 
-        function handleUnlock(event) {
-            event.preventDefault();
-            const input = document.getElementById('passcodeInput');
-            const errorMsg = document.getElementById('lockErrorMessage');
-            const lockCard = document.getElementById('lockCard');
-            const rememberCheck = document.getElementById('rememberSessionCheck');
+    // ==========================================
+    // TAB 4: BS 7671 CABLE SIZING LOGIC
+    // ==========================================
+    function calculateCable() {
+      const Ib = parseFloat(document.getElementById('cableIb').value) || 0;
+      const In = parseFloat(document.getElementById('cableIn').value) || 0;
+      const L = parseFloat(document.getElementById('cableLength').value) || 0;
+      const phase = document.getElementById('cablePhase').value;
+      const Ca = parseFloat(document.getElementById('cableCa').value) || 1;
+      const Cg = parseFloat(document.getElementById('cableCg').value) || 1;
 
-            if (input.value.trim() === DEFAULT_PASSCODE) {
-                errorMsg.classList.add('hidden');
-                if (rememberCheck.checked) {
-                    localStorage.setItem(SESSION_KEY, 'true');
-                } else {
-                    sessionStorage.setItem(SESSION_KEY, 'true');
-                    localStorage.setItem(SESSION_KEY, 'true'); // Default allow session for smooth usage
-                }
-                document.getElementById('lockScreen').classList.add('hidden');
-                input.value = '';
-            } else {
-                errorMsg.classList.remove('hidden');
-                lockCard.classList.remove('animate-shake');
-                void lockCard.offsetWidth; // Trigger reflow for animation restart
-                lockCard.classList.add('animate-shake');
-            }
-        }
+      const reqIz = In / (Ca * Cg);
+      document.getElementById('resCableIz').innerText = `${reqIz.toFixed(1)} A`;
 
-        function togglePasscodeVisibility() {
-            const input = document.getElementById('passcodeInput');
-            const eyeIcon = document.getElementById('eyeIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                eyeIcon.className = 'fa-solid fa-eye-slash';
-            } else {
-                input.type = 'password';
-                eyeIcon.className = 'fa-solid fa-eye';
-            }
-        }
+      // Standard BS 7671 Cable Rating Table (mm² -> Rating A, mV/A/m)
+      const cableTable = [
+        { size: 1.5, rating: 20, mv: 29 },
+        { size: 2.5, rating: 27, mv: 18 },
+        { size: 4.0, rating: 37, mv: 11 },
+        { size: 6.0, rating: 47, mv: 7.3 },
+        { size: 10.0, rating: 65, mv: 4.4 },
+        { size: 16.0, rating: 87, mv: 2.8 },
+        { size: 25.0, rating: 114, mv: 1.75 }
+      ];
 
-        function lockSuite() {
-            localStorage.removeItem(SESSION_KEY);
-            sessionStorage.removeItem(SESSION_KEY);
-            const lockScreen = document.getElementById('lockScreen');
-            lockScreen.classList.remove('hidden');
-            document.getElementById('passcodeInput').focus();
-        }
+      let chosen = cableTable.find(c => c.rating >= reqIz);
+      if (!chosen) chosen = cableTable[cableTable.length - 1];
 
-        // Mobile Smooth Navigation Scroll
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
+      // Voltage drop computation
+      const mV = chosen.mv;
+      const Vd = (mV * Ib * L) / 1000;
+      const Vnominal = phase === '1P' ? 230 : 400;
+      const VdPercent = (Vd / Vnominal) * 100;
 
-        // Load Pre-populated Professional Demo Data
-        function loadDemoData() {
-            lightingRows = [
-                { name: 'Executive Office 101', length: 6.0, width: 4.5, lux: 500, uf: 0.65, mf: 0.80, wattPerFixt: 36 },
-                { name: 'Main Conference Room', length: 8.5, width: 5.0, lux: 400, uf: 0.70, mf: 0.80, wattPerFixt: 45 },
-                { name: 'Server & IT Hub', length: 5.0, width: 4.0, lux: 500, uf: 0.60, mf: 0.85, wattPerFixt: 40 },
-                { name: 'Primary Corridor', length: 12.0, width: 2.5, lux: 150, uf: 0.55, mf: 0.75, wattPerFixt: 28 }
-            ];
+      document.getElementById('resCableSize').innerText = `${chosen.size} mm² Cu`;
+      document.getElementById('resVdVal').innerText = `${Vd.toFixed(2)} V`;
+      document.getElementById('resVdPercent').innerText = `${VdPercent.toFixed(2)}% (Max 4%)`;
 
-            dbRows = [
-                { ref: 'LGT-CCT-01', desc: 'Office Lighting Fixtures', watt: 850, qty: 1, phase: 'R', df: 0.90, cable: '3C x 2.5 mm² PVC' },
-                { ref: 'POWER-RAW-01', desc: 'General Socket Outlets', watt: 2500, qty: 1, phase: 'Y', df: 0.60, cable: '3C x 2.5 mm² XLPE' },
-                { ref: 'AC-UNIT-01', desc: 'Split Air Conditioner 2HP', watt: 1800, qty: 2, phase: 'B', df: 0.80, cable: '3C x 4.0 mm² XLPE' },
-                { ref: 'SERVER-UPS-01', desc: 'Central UPS Supply Cct', watt: 4500, qty: 1, phase: 'R', df: 1.00, cable: '3C x 6.0 mm² XLPE' },
-                { ref: 'POWER-RAW-02', desc: 'Pantry Appliances Load', watt: 3000, qty: 1, phase: 'Y', df: 0.70, cable: '3C x 4.0 mm² XLPE' },
-                { ref: 'AC-UNIT-02', desc: 'Executive AC Condenser', watt: 2200, qty: 2, phase: 'B', df: 0.80, cable: '3C x 4.0 mm² XLPE' }
-            ];
+      const barWidth = Math.min((VdPercent / 4) * 100, 100);
+      document.getElementById('vdBar').style.width = `${barWidth}%`;
 
-            vdRows = [
-                { ref: 'MDB-SUB-01', from: 'Main Transformer', to: 'MDB Ground Fl', loadKw: 45.0, length: 65, cableIdx: 7 }, // 50 mm²
-                { ref: 'DB-LGT-01', from: 'MDB Ground Fl', to: 'DB-Lighting-L1', loadKw: 12.5, length: 35, cableIdx: 3 }, // 10 mm²
-                { ref: 'DB-PWR-01', from: 'MDB Ground Fl', to: 'DB-Power-L1', loadKw: 28.0, length: 45, cableIdx: 5 }   // 25 mm²
-            ];
+      const statusBox = document.getElementById('cableStatusBox');
+      if (VdPercent <= 4.0) {
+        statusBox.className = "p-3 rounded-lg bg-emerald-950/40 border border-emerald-700/60 text-xs text-emerald-300 font-medium";
+        statusBox.innerText = `✓ Cable ${chosen.size}mm² meets BS 7671 current capacity and voltage drop limits.`;
+        document.getElementById('vdBar').className = "bg-eks-emerald h-2 rounded-full";
+      } else {
+        statusBox.className = "p-3 rounded-lg bg-rose-950/40 border border-rose-700/60 text-xs text-rose-300 font-medium";
+        statusBox.innerText = `⚠ Warning: Voltage drop (${VdPercent.toFixed(2)}%) exceeds the 4.0% limit. Upsize cable!`;
+        document.getElementById('vdBar').className = "bg-eks-rose h-2 rounded-full";
+      }
+    }
 
-            renderAll();
-        }
+    // ==========================================
+    // TOAST NOTIFICATIONS
+    // ==========================================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      let borderCol = type === 'success' ? 'border-eks-emerald text-eks-emerald' : 'border-eks-rose text-eks-rose';
+      
+      toast.className = `bg-eks-800 border ${borderCol} px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center space-x-2 transition transform translate-y-2 opacity-0`;
+      toast.innerHTML = `
+        <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i>
+        <span>${message}</span>
+      `;
 
-        function clearAllData() {
-            lightingRows = [];
-            dbRows = [];
-            vdRows = [];
-            renderAll();
-        }
+      container.appendChild(toast);
 
-        // Add Row Handlers
-        function addLightingRow() {
-            lightingRows.push({ name: 'New Room Space', length: 5.0, width: 4.0, lux: 300, uf: 0.65, mf: 0.80, wattPerFixt: 36 });
-            renderLighting();
-            calculateAll();
-        }
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
 
-        function addDBRow() {
-            const nextIndex = dbRows.length + 1;
-            const phases = ['R', 'Y', 'B'];
-            const assignedPhase = phases[(nextIndex - 1) % 3];
-            dbRows.push({ ref: `CCT-${nextIndex.toString().padStart(2, '0')}`, desc: 'General Circuit Load', watt: 1500, qty: 1, phase: assignedPhase, df: 0.80, cable: '3C x 2.5 mm² XLPE' });
-            renderDB();
-            calculateAll();
-        }
-
-        function addVDRow() {
-            vdRows.push({ ref: `FEEDER-${(vdRows.length + 1).toString().padStart(2, '0')}`, from: 'MDB Node', to: 'Sub-DB', loadKw: 15.0, length: 30, cableIdx: 3 });
-            renderVD();
-            calculateAll();
-        }
-
-        // Delete Row Handlers
-        function deleteLightingRow(idx) {
-            lightingRows.splice(idx, 1);
-            renderLighting();
-            calculateAll();
-        }
-
-        function deleteDBRow(idx) {
-            dbRows.splice(idx, 1);
-            renderDB();
-            calculateAll();
-        }
-
-        function deleteVDRow(idx) {
-            vdRows.splice(idx, 1);
-            renderVD();
-            calculateAll();
-        }
-
-        // Render Module 1: Lighting Table
-        function renderLighting() {
-            const tbody = document.getElementById('lightingTbody');
-            tbody.innerHTML = '';
-
-            lightingRows.forEach((row, i) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-800/40 transition';
-                tr.innerHTML = `
-                    <td class="p-2">
-                        <input type="text" value="${row.name}" onchange="lightingRows[${i}].name = this.value; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="number" step="0.1" value="${row.length}" oninput="lightingRows[${i}].length = parseFloat(this.value)||0; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="number" step="0.1" value="${row.width}" oninput="lightingRows[${i}].width = parseFloat(this.value)||0; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2 font-bold text-cyan-400" id="lightArea_${i}">0.00</td>
-                    <td class="p-2">
-                        <select onchange="onLuxPresetChange(${i}, this.value)" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                            <option value="500" ${row.lux === 500 ? 'selected' : ''}>Office (500 lx)</option>
-                            <option value="400" ${row.lux === 400 ? 'selected' : ''}>Conference (400 lx)</option>
-                            <option value="150" ${row.lux === 150 ? 'selected' : ''}>Corridor (150 lx)</option>
-                            <option value="500" ${row.lux === 500 ? 'selected' : ''}>Server (500 lx)</option>
-                            <option value="200" ${row.lux === 200 ? 'selected' : ''}>Storage (200 lx)</option>
-                        </select>
-                    </td>
-                    <td class="p-2">
-                        <input type="number" step="0.05" min="0.1" max="1.0" value="${row.uf}" oninput="lightingRows[${i}].uf = parseFloat(this.value)||0.6; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="number" step="0.05" min="0.1" max="1.0" value="${row.mf}" oninput="lightingRows[${i}].mf = parseFloat(this.value)||0.8; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2 font-bold text-amber-400" id="lightLumens_${i}">0</td>
-                    <td class="p-2">
-                        <input type="number" value="${row.wattPerFixt}" oninput="lightingRows[${i}].wattPerFixt = parseFloat(this.value)||36; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2 font-bold text-emerald-400" id="lightKw_${i}">0.00</td>
-                    <td class="p-2 text-center no-print">
-                        <button onclick="deleteLightingRow(${i})" class="text-rose-400 hover:text-rose-300 transition px-1.5 py-1"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function onLuxPresetChange(idx, val) {
-            lightingRows[idx].lux = parseFloat(val);
-            calculateAll();
-        }
-
-        // Render Module 2: DB Schedule
-        function renderDB() {
-            const tbody = document.getElementById('dbTbody');
-            tbody.innerHTML = '';
-
-            dbRows.forEach((row, i) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-800/40 transition';
-                tr.innerHTML = `
-                    <td class="p-2">
-                        <input type="text" value="${row.ref}" onchange="dbRows[${i}].ref = this.value; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="text" value="${row.desc}" onchange="dbRows[${i}].desc = this.value; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="number" value="${row.watt}" oninput="dbRows[${i}].watt = parseFloat(this.value)||0; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="number" value="${row.qty}" oninput="dbRows[${i}].qty = parseInt(this.value)||1; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2 font-bold text-cyan-400" id="dbTotalWatt_${i}">0</td>
-                    <td class="p-2">
-                        <select onchange="dbRows[${i}].phase = this.value; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500 font-bold">
-                            <option value="R" ${row.phase === 'R' ? 'selected' : ''} class="text-rose-400">R (Red)</option>
-                            <option value="Y" ${row.phase === 'Y' ? 'selected' : ''} class="text-amber-400">Y (Yellow)</option>
-                            <option value="B" ${row.phase === 'B' ? 'selected' : ''} class="text-sky-400">B (Blue)</option>
-                        </select>
-                    </td>
-                    <td class="p-2">
-                        <input type="number" step="0.05" min="0.1" max="1.0" value="${row.df}" oninput="dbRows[${i}].df = parseFloat(this.value)||1.0; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2 font-bold text-emerald-400" id="dbDemandWatt_${i}">0</td>
-                    <td class="p-2 font-bold text-amber-400" id="dbCurrent_${i}">0.00</td>
-                    <td class="p-2 font-bold text-indigo-400" id="dbMcb_${i}">16A</td>
-                    <td class="p-2">
-                        <input type="text" value="${row.cable}" onchange="dbRows[${i}].cable = this.value; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2 text-center no-print">
-                        <button onclick="deleteDBRow(${i})" class="text-rose-400 hover:text-rose-300 transition px-1.5 py-1"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Render Module 3: Voltage Drop
-        function renderVD() {
-            const tbody = document.getElementById('vdTbody');
-            tbody.innerHTML = '';
-
-            vdRows.forEach((row, i) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-800/40 transition';
-
-                let cableOptionsHTML = '';
-                CABLE_DATABASE.forEach((c, cIdx) => {
-                    cableOptionsHTML += `<option value="${cIdx}" ${row.cableIdx === cIdx ? 'selected' : ''}>${c.size} (${c.mv} mV/A/m)</option>`;
-                });
-
-                tr.innerHTML = `
-                    <td class="p-2">
-                        <input type="text" value="${row.ref}" onchange="vdRows[${i}].ref = this.value; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="text" value="${row.from}" onchange="vdRows[${i}].from = this.value; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="text" value="${row.to}" onchange="vdRows[${i}].to = this.value; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <input type="number" step="0.5" value="${row.loadKw}" oninput="vdRows[${i}].loadKw = parseFloat(this.value)||0; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2 font-bold text-amber-400" id="vdCurrent_${i}">0.00</td>
-                    <td class="p-2">
-                        <input type="number" value="${row.length}" oninput="vdRows[${i}].length = parseFloat(this.value)||0; calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                    </td>
-                    <td class="p-2">
-                        <select onchange="vdRows[${i}].cableIdx = parseInt(this.value); calculateAll()" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-500">
-                            ${cableOptionsHTML}
-                        </select>
-                    </td>
-                    <td class="p-2 text-slate-400" id="vdMv_${i}">0.00</td>
-                    <td class="p-2 font-bold text-cyan-400" id="vdVolts_${i}">0.00 V</td>
-                    <td class="p-2 font-bold text-rose-400" id="vdPercent_${i}">0.00%</td>
-                    <td class="p-2 text-center" id="vdBadge_${i}">-</td>
-                    <td class="p-2 text-center no-print">
-                        <button onclick="deleteVDRow(${i})" class="text-rose-400 hover:text-rose-300 transition px-1.5 py-1"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderAll() {
-            renderLighting();
-            renderDB();
-            renderVD();
-            calculateAll();
-        }
-
-        // Global Dynamic Calculation Engine
-        function calculateAll() {
-            const vSys = parseFloat(document.getElementById('voltageSystem').value) || 400;
-            const pf = parseFloat(document.getElementById('powerFactor').value) || 0.85;
-
-            // 1. Calculate Lighting Module
-            let totLightArea = 0;
-            let totLightLumens = 0;
-            let totLightPowerKw = 0;
-
-            lightingRows.forEach((row, i) => {
-                const area = (row.length || 0) * (row.width || 0);
-                const lumens = (row.lux * area) / ((row.uf || 0.65) * (row.mf || 0.80));
-                // Est Lumens/Watt = 90 lm/W for modern LED panels
-                const totalWatts = (lumens / 90);
-                const powerKw = totalWatts / 1000;
-
-                totLightArea += area;
-                totLightLumens += lumens;
-                totLightPowerKw += powerKw;
-
-                const areaEl = document.getElementById(`lightArea_${i}`);
-                const lumensEl = document.getElementById(`lightLumens_${i}`);
-                const kwEl = document.getElementById(`lightKw_${i}`);
-
-                if (areaEl) areaEl.innerText = area.toFixed(2);
-                if (lumensEl) lumensEl.innerText = Math.round(lumens).toLocaleString();
-                if (kwEl) kwEl.innerText = powerKw.toFixed(2);
-            });
-
-            document.getElementById('totalLightArea').innerText = `${totLightArea.toFixed(2)} m²`;
-            document.getElementById('totalLightLumens').innerText = `${Math.round(totLightLumens).toLocaleString()} lm`;
-            document.getElementById('totalLightPower').innerText = `${totLightPowerKw.toFixed(2)} kW`;
-
-            // 2. Calculate DB Load Schedule & Phase Balancing
-            let totDbConnectedW = 0;
-            let totDbDemandW = 0;
-
-            let phaseR_W = 0;
-            let phaseY_W = 0;
-            let phaseB_W = 0;
-
-            dbRows.forEach((row, i) => {
-                const totalW = (row.watt || 0) * (row.qty || 1);
-                const demandW = totalW * (row.df || 1.0);
-
-                // Single phase branch circuit operating current
-                const current = demandW / (230 * pf);
-                const recMcb = STANDARD_BREAKERS.find(b => b >= current * 1.25) || 125;
-
-                totDbConnectedW += totalW;
-                totDbDemandW += demandW;
-
-                if (row.phase === 'R') phaseR_W += demandW;
-                if (row.phase === 'Y') phaseY_W += demandW;
-                if (row.phase === 'B') phaseB_W += demandW;
-
-                const totalWEl = document.getElementById(`dbTotalWatt_${i}`);
-                const demandWEl = document.getElementById(`dbDemandWatt_${i}`);
-                const currentEl = document.getElementById(`dbCurrent_${i}`);
-                const mcbEl = document.getElementById(`dbMcb_${i}`);
-
-                if (totalWEl) totalWEl.innerText = totalW.toLocaleString();
-                if (demandWEl) demandWEl.innerText = Math.round(demandW).toLocaleString();
-                if (currentEl) currentEl.innerText = current.toFixed(2);
-                if (mcbEl) mcbEl.innerText = `${recMcb}A MCB`;
-            });
-
-            // Phase Balancing Metrics
-            const phaseR_kW = phaseR_W / 1000;
-            const phaseY_kW = phaseY_W / 1000;
-            const phaseB_kW = phaseB_W / 1000;
-            const maxPhasekW = Math.max(phaseR_kW, phaseY_kW, phaseB_kW, 0.001);
-
-            document.getElementById('phaseRVal').innerText = `${phaseR_kW.toFixed(2)} kW`;
-            document.getElementById('phaseYVal').innerText = `${phaseY_kW.toFixed(2)} kW`;
-            document.getElementById('phaseBVal').innerText = `${phaseB_kW.toFixed(2)} kW`;
-
-            document.getElementById('barPhaseR').style.width = `${Math.min(100, (phaseR_kW / maxPhasekW) * 100)}%`;
-            document.getElementById('barPhaseY').style.width = `${Math.min(100, (phaseY_kW / maxPhasekW) * 100)}%`;
-            document.getElementById('barPhaseB').style.width = `${Math.min(100, (phaseB_kW / maxPhasekW) * 100)}%`;
-
-            // Calculate Unbalance %
-            const avgPhaseKw = (phaseR_kW + phaseY_kW + phaseB_kW) / 3;
-            let unbalancePct = 0;
-            if (avgPhaseKw > 0) {
-                const maxDev = Math.max(Math.abs(phaseR_kW - avgPhaseKw), Math.abs(phaseY_kW - avgPhaseKw), Math.abs(phaseB_kW - avgPhaseKw));
-                unbalancePct = (maxDev / avgPhaseKw) * 100;
-            }
-            const unbalanceEl = document.getElementById('phaseUnbalancePercent');
-            unbalanceEl.innerText = `Unbalance: ${unbalancePct.toFixed(1)}% (${unbalancePct <= 15 ? 'BALANCED' : 'UNBALANCED'})`;
-            unbalanceEl.className = `text-xs font-mono font-bold ${unbalancePct <= 15 ? 'text-emerald-400' : 'text-rose-400'}`;
-
-            // 3. Calculate Cable Voltage Drop
-            let maxFeederVD = 0;
-            let anyVDFailed = false;
-
-            vdRows.forEach((row, i) => {
-                const pKw = row.loadKw || 0;
-                let current = 0;
-                if (vSys === 400) {
-                    current = (pKw * 1000) / (Math.sqrt(3) * 400 * pf);
-                } else {
-                    current = (pKw * 1000) / (230 * pf);
-                }
-
-                const cableData = CABLE_DATABASE[row.cableIdx] || CABLE_DATABASE[0];
-                const mvFactor = cableData.mv;
-                const vDrop = (current * (row.length || 0) * mvFactor) / 1000;
-                const vdPercent = (vDrop / vSys) * 100;
-
-                if (vdPercent > maxFeederVD) maxFeederVD = vdPercent;
-                if (vdPercent > 4.0) anyVDFailed = true;
-
-                const currentEl = document.getElementById(`vdCurrent_${i}`);
-                const mvEl = document.getElementById(`vdMv_${i}`);
-                const vDropEl = document.getElementById(`vdVolts_${i}`);
-                const percentEl = document.getElementById(`vdPercent_${i}`);
-                const badgeEl = document.getElementById(`vdBadge_${i}`);
-
-                if (currentEl) currentEl.innerText = current.toFixed(2);
-                if (mvEl) mvEl.innerText = mvFactor.toFixed(3);
-                if (vDropEl) vDropEl.innerText = `${vDrop.toFixed(2)} V`;
-                if (percentEl) percentEl.innerText = `${vdPercent.toFixed(2)}%`;
-
-                if (badgeEl) {
-                    if (vdPercent <= 4.0) {
-                        badgeEl.innerHTML = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">PASS</span>`;
-                    } else {
-                        badgeEl.innerHTML = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">FAIL (>4%)</span>`;
-                    }
-                }
-            });
-
-            // 4. Update Dashboard KPI Summary Metrics
-            const totalConnectedKw = (totDbConnectedW / 1000) + totLightPowerKw;
-            const totalDemandKw = (totDbDemandW / 1000) + totLightPowerKw;
-
-            let mainCurrent = 0;
-            if (vSys === 400) {
-                mainCurrent = (totalDemandKw * 1000) / (Math.sqrt(3) * 400 * pf);
-            } else {
-                mainCurrent = (totalDemandKw * 1000) / (230 * pf);
-            }
-
-            const recMainBreaker = STANDARD_BREAKERS.find(b => b >= mainCurrent * 1.25) || 800;
-
-            document.getElementById('kpiConnectedLoad').innerText = totalConnectedKw.toFixed(2);
-            document.getElementById('kpiDemandLoad').innerText = totalDemandKw.toFixed(2);
-            document.getElementById('kpiMainCurrent').innerText = mainCurrent.toFixed(2);
-            document.getElementById('kpiBreakerRating').innerText = recMainBreaker;
-            document.getElementById('kpiMaxVD').innerText = maxFeederVD.toFixed(2);
-
-            // Compliance Badge Status
-            const sysBadge = document.getElementById('sysComplianceBadge');
-            if (!anyVDFailed && unbalancePct <= 20) {
-                sysBadge.className = "px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center space-x-1.5";
-                sysBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>PASS (COMPLIANT)</span>`;
-            } else {
-                sysBadge.className = "px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center space-x-1.5";
-                sysBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i><span>NON-COMPLIANT</span>`;
-            }
-        }
-
-        // Save State to Local Storage
-        function saveToLocalStorage() {
-            const data = {
-                projName: document.getElementById('projName').value,
-                engineerName: document.getElementById('engineerName').value,
-                voltageSystem: document.getElementById('voltageSystem').value,
-                powerFactor: document.getElementById('powerFactor').value,
-                lightingRows: lightingRows,
-                dbRows: dbRows,
-                vdRows: vdRows
-            };
-            localStorage.setItem('eks_suite_data', JSON.stringify(data));
-            showToast('Project data saved to local storage.');
-        }
-
-        // Helper Toast Notification (Mobile Alert replacement)
-        function showToast(msg) {
-            const toast = document.createElement('div');
-            toast.className = 'fixed bottom-4 right-4 z-[99] bg-slate-800 text-cyan-400 border border-cyan-500/30 font-semibold px-4 py-2.5 rounded-xl shadow-xl text-xs flex items-center space-x-2 animate-bounce';
-            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${msg}</span>`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2500);
-        }
-
-        // Export Data JSON File
-        function exportJSON() {
-            const data = {
-                suite: "EKS Professional Electrical Engineering Suite",
-                version: "2.5",
-                exportDate: new Date().toISOString(),
-                project: {
-                    name: document.getElementById('projName').value,
-                    engineer: document.getElementById('engineerName').value,
-                    voltageSystem: document.getElementById('voltageSystem').value,
-                    powerFactor: document.getElementById('powerFactor').value
-                },
-                lightingCalculations: lightingRows,
-                dbSchedule: dbRows,
-                voltageDropCalculations: vdRows
-            };
-
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `EKS_Electrical_Report_${Date.now()}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-    </script>
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
 </body>
 </html>
